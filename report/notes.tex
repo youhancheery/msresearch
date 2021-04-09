@@ -1,0 +1,147 @@
+
+\section{Notes from papers}
+
+\subsection{Using contrastive divergence to seed Monte Carlo MLE for exponential-family
+random graph models (Krivitsky, 2015)}
+
+\begin{itemize}
+
+    \item This paper aims to address the starting point problem of MCMC methods using something known as contrastive divergence which uses a series of abridged MCMC runs instead of running one to stationarity.
+    \item Intractable normalizing constants make life in the ERGM space challenging hence the need for MCMC methods. Sampling techniques need a starting point. Performance and feasibility depend on this value.
+    \item Combined with importance sampling MC MLE to find the initial values
+    \item What are curved models? What is a binary ERGM? (i.e. h(theta) proportional 1)
+    \item The body of techniques currently used to find the MLE can be split into two broad categories: stochastic approximation (SA) and MCMLE.
+    \item \textbf{Stochastic approximation methods}
+    \begin{itemize}
+        \item The first methods were these types
+        \item Given a guess $\theta^{t}$, these techniques simulate a sample from ERGM($\theta^{t}$) and update
+        \item We require an initial guess
+        \item A bad initial guess may result in issues of near-degeneracy, concentrating on the edge of the convex hull of the set of attainable statistics.
+        \item If all possible values for the parameter $\theta$ are not in the realm of Real (q dim) numbers, then MCMC sampling for $\theta^{0}$ will diverge in the first place
+        \item Poor choice of $\theta^{0}$ may induce a very dense network (after simulation), thus resulting in a large impact on computation
+        \item SA methods are inefficient as each new $\theta^{t}$ requires a burn-in and a sample to estimate $U(\theta^{t})$ - \textbf{what does this mean? why do we need a new MCMC for each $\theta^{t}$?} Note here that $U$ is the score function used to find the MLE.
+        \item SA will fail if the entirety of the sample lies on the edge of the convex hull.
+    \end{itemize}
+    \item \textbf{Monte Carlo MLE methods}
+\begin{itemize}
+    \item Uses importance sampling integration to find $\frac{\kappa(\theta')}{\kappa(\theta)}$
+    \item Given a sample from the ERGM at point $\theta^{t}$ we then update $\theta^{t+1}$
+    \item There are a number of benefits in using the MCMLE approach - namely that it uses the entire distribution of $y^{\theta^{t}}$ instead of just the first moment, incorporates nonlinear effects on $\theta$ to determine the next guess, and automatically determines the step length = less steps to convergence.
+    \item That said, it is even more susceptible to a bad $\theta^{0}$ guess.
+    \item Can also fail for non-curved ERGMs when the convex hull of the simulated statistic does not contain $g(y^{obs})$ (i think this just means the observed graph itself?)
+    \item Hummel et. al (2012) proposed two ways to address the bad first guess problem. Firstly, assuming $g(Y)$ is log-normal, then $exp[{\eta(\theta') - n(\theta)}^{T}g(Y)]$ is lognormal and we can approximate the expectation such that the maximiser depends only on the first two moments of $y^{\theta^{t}}$ which has a closed form solution for non-curved ERGMs. The second fix is a partial stepping technique that shifts the observed statistic to the centroid of the simulated statistic, reducing the step but preserving its direction. This approach \emph{survives} poor starting values but does not make make immune to them.
+\end{itemize}
+    \item There are two approaches to finding good values for $y^{\theta^{0}}$. One is the maximum pseudo/composite likelihood estimation (MPLE/MCLE) and the second is contrastive divergence. 
+    \item \textbf{Composite likelihood methods}
+    \begin{itemize}
+        \item Before simulation methods became popularised we had pseudolikelihood estimators (Strauss + Ikeda, 1974). Here the likelihood was approximated and $y_{i,j}$ is an indicator for the presence of ties. This lead to a score fuction that is a nonlinear logistic regression.
+        \item MPLE can be quite different from the MLE and it's mainly used to initialise them (what is meant by "them"?)
+        \item MPLE/MCLE result in a multinomial model to enumerate the set of possible pairs of toggles - thus adding more burden to the modeller.
+    \end{itemize}
+    \item \textbf{Contrastive divergence}
+    \begin{itemize}
+        \item Hinton (2002) suggested we don't run the MCMC simulation to convergence, but instead make parallel updates starting at the observed data and calculating the gradient based on that.
+    \end{itemize}
+    \item \textbf{Questions for Pavel}
+    \begin{itemize}
+    \item Emphasis in this research on methods that do well for $\theta^{0}$? "Poor choice may result in a dense network" = bad simulation?
+    Are some methods more sensitive to initial values e.g. importance sampling vs. Robins Munro
+    \item Often in the CD paper we refer to curved vs. non-curved ERGMs - what is the difference and is this something that I should be separately learning about?
+    When you have an exponential family model you have exponential form - you can transform theta before taking the dot product. Now you have model parameter and the mapping mapped to a vector it needs to be the same length of the statistics. size of theta < g = strict definition of curved family. From the point of view of computation, whether the theta is shorter or not/transformation. Not curved ones are special cases of curved ones. Helpful for the algorithm to accommodate some transformations of theta
+    \item In what instances can a model only be done via MCMC simulation and not the MPLE/MCLE methods?
+    \item Confusing result on page 7 regarding contrastive divergence as discovered by Asuncion et al. (2010).
+    \item What is $CD_\infty$ Confirm my understanding: $CD_{1}$ is the MPLE equivalent (it finds the MLE under the pseudo method), while $CD_\infty$ is the actual MLE?
+    \item The three approaches to finding $theta^0$
+    \end{itemize}
+    \item \textbf{Papers off the back of this I think I should read}
+    \begin{itemize}
+        \item Hinton (2002)
+        \item Wang et. al. (2014)
+        \item Hummel (2011) perhaps?
+        \item Hummel et. al. (2012) (partial stepping techniques)
+    \end{itemize}
+\end{itemize}
+
+How well do different algorithms behave if say you start with a vector of 0s for theta, or try different configurations for the starting values
+
+\subsection{Fast Maximum Likelihood Estimation via Equilibrium Expectation for Large Network Data}
+
+\begin{itemize}
+    \item This paper proposes a fast algorithm for MLE which allows for larger network estimation. It leverages properties of the Markov chain at equilibrium.
+    \item Existing approaches for MLE such as MCMCMLE, MoM, and Bayesian estimation use iterative algorithms that successively update $\theta$ until the expectation of the network under the statistics is equivalent to the statistic of the observed network. To do this, MCMC draws a large number of simulated networks for various values of $\theta$, $x_{s}(\theta)$. The simulated network $x_{s}$ is a network drawn from probability distribution $\pi(x, \theta)$.
+    \item Each time a new simulated network is drawn, we need to satisfy the convergence criteria $\Sigma_{x,x'}\pi(x, \theta)P(x \rightarrow x', \theta)(z_{A}(x') - z_{A}(x))$. This is very expensive computationally.
+    \item Consider the equation $E_{\pi(\theta)}(\Delta_{Z_{A}}(x, \theta)) = 0$. This suggests that if network $x$ is drawn from probability distribution $\pi(x, \theta)$ then the expected value of $\Delta_{Z_{A}}(x, \theta)$ is 0. Only valid when at the limiting distribution.
+    \item $\Delta_{Z_{A}}(x, \theta)$ is found using Monte Carlo integration. Assuming that are $s_{i}$ Monte Carlo sample of networks that are i.i.d from $\pi(x, \theta)$ then the expectation can be calculated. This is obviously not a realistic assumption which will later be removed.
+    \item I.e. $E_{\pi(\theta)}(\Delta_{Z_{A}}(x, \theta)) = \frac{1}{n}\Sigma_{i}\Delta_{Z_{A}}(x_{s_{i}}, \theta)$
+    \item With enough sample of networks we can efficiently compute the LHS and then solve with respect to $\theta$.
+    \item No burn-in time using MC integration so it's much more efficient.
+    \item Ergodicity of systems suggests that if the network $x_{s}$ is very large then the true $\theta^{*}$ may be estimated from $f_{A}(x_{obs}, \theta)$, thus dropping the need to sum. This leads to the result $\Delta Z_{A}(x_s, \theta^{EE}) = 0$.
+    \item If the network $x_{s}$ is very large then $\theta^{EE} = \theta^*$
+    \item \textbf{However in reality we only have ONE $x_{obs}$}
+    \item In reality - this looks like Contrastive Divergence (CD) as applied to ERGM parameter estimation (instead of for finding $\theta^{0}$)
+    \item So what's done instead is that if a solution to the method of moments exists then we can draw an $x_s$ from $\pi(x, \theta)$ such that we satisfy $z_{A}(x_s) = z_{A}(x_obs)$. The network $x_s$ can be drawn from an MCMC simulation. $\theta$ is updated iteratively until we have a solution for $Z_{A}(x_s, \theta^{EE}) = 0$. It employs Metropolis-Hastings
+    \item Since we are not drawing many simulated networks from various $\theta$ the algorithm is considerably faster.
+    \item To start the EE algorithm, we use CD1 estimate as the starting point. EE is more sensitive to $K_A$ then it is to $\theta_0$. $K_A$ is subtracted from the old $\theta$ to produce the next $\theta$. This value is used to make sure that $\theta_A$ increases when $dz_A$ is negative and decrease when $dz_A$ is positive. We also require that the exponential family expectation is a monotonically increasing function in $\theta$
+    \item \textbf{Questions for Pavel}
+    \begin{itemize}
+        \item In reality we only have one $x_{obs}$ - but why can't we simulate more networks based on a starting $\theta$ and use those?
+    \end{itemize}
+\end{itemize}
+
+\subsection{Markov Chain Monte Carlo Estimation of Exponential Random Graph Models}
+
+\begin{itemize}
+    \item This paper is about the simulation and MCMC estimation of exponential random graph models.
+    \item A major problem with ERGMs is that for certain parameter values they can have bimodal (or multimodal) distributions for the sufficient statistics such as the number of ties
+    \item The modality is reflected in the outcome space being divided into two or more regions whereby the usual MCMC approaches have long sojourn times, with a negligible probability of moving from one region to the next. This leads to slow convergence
+    \item MCMC algorithms must be able to make transitions from a given graph to a very different graph. It is proposed to include transitions to the graph complement as updating steps to improve the speed of convergence to the target distribution
+    \item Recall that a random graph, according to Strauss and Frank (1986) is a Markov graph if there are finite numbers of nodes and if edges between disjoint pairs are independent conditional on the rest of the graph
+    \item Frank and Strauss proposed a simulation based approach to approximate the MLE of any one of the three $\theta_k$ (talking here about the standard p* triad model), given that the other two are fixed at 0. They also proposed a logistic regression method to estimate the full $\theta$ (pseudo MLE).
+    \item While the pseudo MLE approach is nice computationally and intuitively appealing, the properties of the resulting estimator for ERGMs are unknown.
+    \item In addition, the pseudo MLE is not a function of the entire sufficient statistic $u(Y)$ which implies that it is not an admissible estimator for squared error loss function (lehmann, 1983)
+    \item Many of the older MCMC estimation methods relied on MC simulations of the Markov graph at current parameter values. However, simulation algorithms for the ERGM methods can suffer from severe convergence problems not really outlined previously
+    \item For many models (including triad), there is a large region in which the demarcation between the subset of parameters $\theta$ leads to graphs with relatively low expected densities, and the subset of parameters $\theta$ that lead to graphs with high expected densities; is quite sharp. Paramerters in or near the demarcation zone can have bimodal density.
+    \item With more nodes, the demarcation becomes more marked. (demarcation = fixing the boundary)
+    \item One MCMC process: assuming you are at $\theta^(n)$, a MC simulation of the Markov graph is made which is used to estimate the moments of the distribution, which are then used to make an expansion approximating $\mu(\theta)$ for $\theta$ in the neighbourhood of $\theta^(n)$. This is then used to solve the moment equation to provide an estimate for $\theta^(n+1)$
+    \item This paper uses a version of the Robbins-Monro algorithm, which is itself considered by some a MC variant of the Newton-Raphson algorithm.
+    \item Robbins-Monro is a stochastic iterative algorithm intended to solve equations of the form $E\{Z_\theta\} = 0$. In the ERGM case, consider $Z_{\theta} = u(Y) - u_0$ where $u_0 = u(y)$ is the observed value of the sufficient statistic.
+    \item The iteration step in the Robbins-Monro algorithm with step-size $a_n$ is $\hat{\theta}^{(n+1)} = \hat{\theta}^{(n)} - a_nD_n^{-1}Z(n)$ where $Z(n)$ are random variables such that the conditional distribution of $Z(n)$ given $Z(1)$,...,$Z(n-1)$ is the distribution of $Z_(\theta)$ obtained for $\theta = \hat{\theta}^(n)$
+    \item The stochastic process $\hat{\theta}^(n)$ generated by this MC simulation is a Markov chain, because for any $n_0$ the sequence $\{\hat{\theta}^(n)\}$ for $n > n_0$ depends on the past value via the last value, $\hat{\theta}^(n_0)$
+    \item \textbf{Questions for Pavel}
+    \begin{itemize}
+        \item There is a lot of mention of the triad model in these older papers. With simulation based methods, how often are they impervious to model specification?
+        \item Is simulating an ERGM a different problem to estimating an ERGM?
+    \end{itemize}
+    
+\end{itemize}
+
+\section{Meeting 24/03}
+
+\begin{itemize}
+\item \textbf{Meeting preparation}
+    \begin{itemize}
+        \item Papers read in the last fortnight: New specifications for ERGM models (Snijders et. al.), inference for curved exponential family random models (Hunter and Handcock), Modelling Social Networks from Sampled Data (Handcock and Gile)
+        \item A lot of material in the themes of simulation, inference and missing data. Need to start boiling down all of this raw material into a coherent thesis that I can start writing.
+        \item High level I am doing a bench marking of the equilibrium expectation algorithm - can we incorporate missing data effectiveness into the tests? Are there other algorithms we want to benchmark? 
+        \item Any meta analysis papers that are worth looking into to gain some kind of inspiration for benchmarking various inference algorithms? What are the types of things people look for including speed, scalability, robustness, etc
+        \item Different types of error: are we only looking at MCMC error and MLE error? In the case of curved ERGMs are there any other errors we are interested in testing? What about finding the expectation and variance in curved ERGMs?
+        \item On the topic of curved ERGM inference - I understand the traditional Thompson and Geyer approach to MCMC. Generate initial guess, approximate the difference between current and initial by a MC integration, then approximate $r$ and continue. But now are we talking iterative methods like Newton-Raphson?
+        \item Is there any relation with this work to simulation of ERGMs?
+    \end{itemize}
+    \item \textbf{Meeting notes}
+    \begin{itemize}
+        \item MCMC and Robbins Monro are the two basis methods for fitting these models, MCMCMLE, while Robbins Monro draws small samples and downweights them... These are competitors to equilibrium expectation 
+        \item MCMC errors are more obvious, versus Robbins Monro not really having a good error approximator. The same goes for equilibrium expectation. 
+        \item Okobayashi and Geyer
+        \item Missing data you can still calculate the likelihood - two normalising constants on top of each other. Each paramter updates requires you to run MCMC twice. 
+        \item For Robbins Monro - there's a question of how do you run that... two MCs running at once? one for constrained and one for unconstrained etc... implementing this is a stretch goal
+        \item Reach goal for equilibrium expectation handling data
+        \item Go to ergm.R - check the mainfit <- switch(...). This is where the equilibrium expectation alogirthm will go
+        \item Method to prefix in control.ergm.R which contains the parameters 
+        \item EE is infrequent complex updates so it should probably be written in C
+        \item Go to SEXP\_DISPATCH\_MCMCPhase12 as an example for the implementation of the algorithm
+        \item Taking the outputs of MCMC and using them 
+        \item Check out MCMC.c.template.do\_not\_include\_directly.h
+        \item Testing a hybrid method - starting with Robbins Monro and then going into MCMCMLE
+    \end{itemize}
+\end{itemize}
