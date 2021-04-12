@@ -4,14 +4,47 @@ In order to benchmark the Equilibrium Expectation estimation method we start by 
 
 \subsection{Stochastic Approximation}
 
-Stochastic Approximation methods were among the first approaches to estimating the ERGM parameters by finding the actual MLE. We specifically note that the these techniques sought the "actual" MLE as it is worth discussing the Maximum Pseudo Likelihood Estimation of ERGM parameters \citet{straussikeda1990}.
+Stochastic Approximation methods were among the first approaches to estimating the ERGM parameters by finding the actual MLE. First introduced by \citeauthor{robbinsmonro1951} in 1951, the stochastic approximation method aims to iteratively find the roots of an optimisation function as represented by an expected value. For a root proposed root $\hat{\theta}$ the \citeauthor{robbinsmonro1951} algorithms states that $\lim_{\hat{\theta_n} \rightarrow \inf} = \theta$, the true root. This is done by iterating through 
+
+\begin{equation}
+\label{eqn:rm_update}
+\theta_{n+1} = \theta_{n} - \alpha_n(N(\theta) - \alpha)
+\end{equation}
+
+Where 
+
+
+In the context of ERGMs, this is ...
+
+Implemented in 2002 by Snijders...
+
+
+We specifically note that the these techniques sought the ``actual'' MLE, as it is worth beginning our discussion with the Maximum Pseudo Likelihood Estimation of ERGM parameters \citet{straussikeda1990}.
 
 %strauss+ikeda1990
 
-Due to the normalising constant, generating the parameters of the ERGM is usually intractable. \citeauthor{straussikeda1990} proposed an approach where calcualating the maximum likelihood function wasn't done on the direct likelihood, rather on a 'pseudo' likelihood.
+Due to the normalising constant, generating the parameters of the ERGM is usually intractable. \citeauthor{straussikeda1990} proposed an approach where calculating the maximum likelihood function wasn't done on the direct likelihood, rather on a 'pseudo' likelihood.
 
+For a dyad independent network model, that is, a model where every dyad (or pair of ties) is independent from the next - maximum likelihood can be calculated. While this assumption simplifies the mathematics of estimation, it limits the practicality of the network model greatly. For dyad dependent networks, \citeauthor{straussikeda1990} proposed the pseudo-likelihood as the product of the probabilities of the $y_{ij}$, with each of the probabilities conditional on the rest of the data \citet{straussikeda1990}.
+
+%ignoring $Z(\theta)$ through the use of conditioning on the rest of the data
+When not conditioning on data, the ERGM takes the log linear form
+\begin{equation}
+\label{eqn:ergm_general_form}
+    Pr(G) = {\frac{1}{Z(\theta)}}e^{\theta'x(G)}
+\end{equation}
+where $\theta$ is a vector of parameters and x(G) is a vector of graph statistics (on the observed graph).
+
+Conditioning on the rest of the graph produces a model form that now does not depend on $\theta$
+\begin{equation}
+\begin{aligned}
+    Pr(y_{ij} = 1|C) = \frac{Pr(G^-)}{Pr(G^-) + Pr(G^+)} \\
+    logit(Pr(y_{ij} = 1|C) = \theta'{x(G^+) - x(G^-)} \\
+    \label{eqn:ergm_no_theta}
+    logit(Pr(y_{ij} = 1|C) = \theta'\delta x_{ij}
+\end{aligned}
+\end{equation}
 %sneijders2002
-
 \subsection{Monte Carlo Maximum Likelihood Estimation (MCMLE)}
 
 \subsection{Techniques for handling Missing Data}
