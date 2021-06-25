@@ -47,4 +47,15 @@ Conditioning on the rest of the graph produces a model form that now does not de
 %sneijders2002
 \subsection{Monte Carlo Maximum Likelihood Estimation (MCMLE)}
 
+Due to the normalising constant in ERGMs $k\boldsymbol{\theta}$ typically being unknown, the means of estimating the probability distribution remains an intractable problem. And while stochastic approximation can be used to estimate the parameters, the rise of computing power has meant Markov Chain Monte Carlo MCMC simulation is typically used to address the value of $k\boldsymbol{\theta}$ (and the MLE as a whole).
+
+Using MCMC estimation typically via the Metropolis-Hastings algorithm estimates network parameters by using the Markov process that asymptotically reaches a unique stationary distribution. A new state, $x'$ is proposed with some probability given by $q(x \rightarrow x'$. 
+
+% why do we reach a unique stationary distribution?
+\subsection{Equilibrium Expectation}
+
+The focus of this paper, the equilibrium expectation algorithm by \citet{eqexpectation} proposes a fast algorithm for exponential random graph model parameters using maximum likelihood estimation which in turn affords an increase in the scale of the network being estimated. The "fast" and "scalable" nature of the equilibrium expectation algorithm are a consequence of the 
+
+For a general MCMC algorithm (such as Metropolis-Hastings), once equilibrium is reached, we have that for all statistics $\sum_{x,x'}\pi(x, \boldsymbol{\theta})P(x \rightarrow x', \boldsymbol{\theta})(Z_A(x') - z_A(x)) = 0$. In contrast, EE replaces this algorithm which must converge for every simulated network $x_s(\boldsymbol{\theta})$ (making the entire estimation computationally quite expensive) with $E_{\pi(\boldsymbol{\theta})}(\DeltaZ_A(x, \boldsymbol{\theta}))$. This implies for a network drawn from a probability distribution $\pi(x, \boldsymbol{\theta})$
+
 \subsection{Techniques for handling Missing Data}
