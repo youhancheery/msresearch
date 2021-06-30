@@ -32,18 +32,21 @@ polblogs <- polblogs[1493:nrow(polblogs),] %>% as.data.frame()
 colnames(polblogs) <- "node1"
 polblogs <- polblogs %>% separate(node1, c("node1", "node2")) # split on spaces
 head(polblogs)
-
 # convert to network
 polblogs_net <- as.network(polblogs, matrix.type = "edgelist")
 plot(polblogs_net, vertex.cex = 3)
 
 # test stochastic approximation
 sa_polblogs <- ergm(polblogs_net ~ edges + triangles, 
-                    control = control.ergm(main.method = "Stochastic-Approximation"))
+                    control = control.ergm(main.method = "Stochastic-Approximation",
+                                           MCMC.return.stats = TRUE,
+                                           MCMC.runtime.traceplot = TRUE))
 
 # test robbins monro
 rm_polblogs <- ergm(polblogs_net ~ edges + triangles,
-                    control = control.ergm(main.method = "Robbins-Monro"))
+                    control = control.ergm(main.method = "Robbins-Monro",
+                                           MCMC.return.stats = TRUE,
+                                           MCMC.runtime.traceplot = TRUE))
 
 # test equilibrium expectation
 ee_polblogs <- ergm(polblogs_net ~ edges + triangles, 
