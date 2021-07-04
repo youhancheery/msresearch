@@ -6,25 +6,31 @@ reinstall_ergm <- function() {
   devtools::install_github("youhancheery/ergm")
 }
 
-time.ergm <- function(...,control,estimate,seed=0){
-  o <- try({
-    set.seed(seed) # For reproducibility.
-    t <- system.time(out <- ergm(...,control=control,estimate=estimate,eval.loglik=FALSE))
-    coef <- coef(out)
-    list(timings=t, coef=coef, iterations=if(out$estimate!="MPLE") out$iterations else 1)
-  })
-  
-  if(inherits(o,"try-error")) o <- list(error=TRUE,error.msg=o,error.when="time.ergm") else o$error=FALSE
-  
-  c(list(est=estimate,ctrl=control,seed=seed),o)
-}
 
-time_response <- function(formula, method, reference=~Bernouli) {
-  
-  control <- control.ergm()
-  
-  runtime <- system.time(output <- ergm(control=control, eval.loglik = FALSE))
-  
+time_response <- function(data, formula, init=NULL, init.method="zeros") {
+
+  methods <- c("Stochastic-Approximation", "EE")
+  # TODO: understand why robbins-monro isn't running properly
+  final <- list()
+  for(method in methods) {
+    for(init in inits) {
+      print(paste("Running estimation using", method))
+      control = ergm::control.ergm(main.method = method, # estimation method
+                                   init=init, # initial values
+                                   init.method=init.method, # 
+                                   MCMC.runtime.traceplot = FALSE,
+                                   MCMC.return.stats = TRUE)
+      
+      runtime <- system.time(output <- ergm::ergm(formula=formula, control=control, eval.loglik = FALSE))
+      coef <- stats::coef(output)
+      iter <- output$iterations
+      final[method] <- list(list("initialisation"=init,
+                                 "timings"=runtime,
+                                 "coef"=coef,
+                                 "iterations"=iter)) 
+    }
+  }
+  return(final)
 }
 
 run.study <- function(name, formula, response=NULL, reference=~Bernoulli, constraints=~., 
@@ -152,12 +158,3 @@ study.fit <- function(name, formula, response, reference, constraints, estimate,
   save(fit, file=paste(name, Sys.time(), Sys.getpid(), round(runif(1)*1e10), "RData", sep="."))
 }
 
-
-run.study("kap.study", kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE))
-run.study("zach.binom.study", zach ~ nonzero+sum+nodefactor("role",base=2)+transitiveweights, reference = ~Binomial(8), response = "contexts", ctrl.cd=control.ergm(CD.maxit=60,CD.trustregion=100000,MCMLE.trustregion=100000))
-run.study("zach.cmp.study", zach ~ nonzero+CMP+sum+nodefactor("role",base=2)+transitiveweights, reference  = ~Poisson, response = "contexts", ctrl.cd=control.ergm(CD.maxit=60,CD.trustregion=100000,MCMLE.trustregion=100000))
-run.study("kap2.study", kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE))
-run.study("ecoli2.study", ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE))
-run.study("ecoli2.self.study", ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1))
-run.study("laz2.c.study", laz ~ gwesp()+nodecov("seniority")+nodefactor("practice")+nodematch("practice")+nodematch("gender")+nodematch("office"), constraints = ~edges)
-run.study("laz2.study", laz ~ edges+gwesp()+nodecov("seniority")+nodefactor("practice")+nodematch("practice")+nodematch("gender")+nodematch("office"))
