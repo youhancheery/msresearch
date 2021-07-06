@@ -1,5 +1,5 @@
 # utils file for reusable functions
-
+REPS <- 5
 # Run this whenever changes have been made to ergm
 reinstall_ergm <- function() {
   installr::uninstall.packages("ergm")
@@ -8,8 +8,21 @@ reinstall_ergm <- function() {
 
 # estimate_parameters <- function {}
 
-time_response <- function(data, formula) {
+run_study <- function(data, formula, reps=REPS) {
+  
+  for (rep in reps) {
+    parallel::mclapply(seq_len(reps), time_response(data, formula, seed = rep))  
+  }
+  
+  # lapply(seq_len(reps), function(rep) {
+  #   parallel::mclapply({time_response(data, formula, seed=rep)}, detached=TRUE)
+  # })
+  
+}
 
+time_response <- function(data, formula, seed) {
+
+  set.seed(seed)
   # different methods we will be running through
   # TODO: understand why robbins-monro isn't running properly
   methods <- c("Stochastic-Approximation", "EE")

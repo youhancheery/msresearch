@@ -4,23 +4,45 @@
 # m$reinstall_ergm()
 library(ergm)
 library(ergm.count)
+library(parallel)
 
-set.seed(1234)
+# set.seed(1234)
+
+# Simulation ranges
+K.LEVELS <- c(1,2,4,16,128)
+M.LEVELS <- c(1,2,4,8)
+KM.MAX <- 256
+STEPLEN.MARGINS <- c(0.05,0.5,1)
+RM.CONFS <- list(list(a0=0.1, c=0.5), list(a0=0.5, c=0.5), list(a0=1, c=0))
+REPS <- 5
+MPLE <- TRUE
+INTERCEPT <- TRUE
+
+
 
 # load all the different datasets
-load("~/Documents/math5005/msresearch/data/supp_datasets.RData")
+load("~/math5005/msresearch/data/supp_datasets.RData")
 m <- modules::use("~/math5005/msresearch/utils.R") 
 
 # ecoli
+# testing that time_response produces something
 output_ecoli2 <- m$time_response(data=ecoli2,
-                                 ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE))
+                                 ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE),
+                                 seed=1234)
 
 output_ecoli2$`Stochastic-Approximation:zeros`$coef
 output_ecoli2$`Stochastic-Approximation:NULL`$coef
 
-
 ouput_ecoli2_self <- m$time_response(data=ecoli2,
-                                     ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1))
+                                     ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE)
+                                     + nodemix("self", base = 1),
+                                     seed=1234)
+
+# testing that parallel run works
+test <- m$run_study(data = ecoli2,
+                    ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE))
+
+
 
 
 # time response for each model (3) across each dataset (3) for a total of 9 fits
