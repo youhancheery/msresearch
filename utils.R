@@ -92,6 +92,12 @@ time_response <- function(data, formula, seed) {
   return(final)
 }
 
-mple_base <- function() {
-  
-}
+
+# run_stoch_approx <- function(data, formula, control, reps=REPS) {
+#   
+# }
+
+
+
+
+
