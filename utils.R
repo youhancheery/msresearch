@@ -43,7 +43,7 @@ time_response <- function(data, formula, seed) {
         # TODO need to add MCMC.samplesize to be high enough number
         control = ergm::control.ergm(main.method = method, # estimation method
                                      init=NULL, # always null so init.method passes values
-                                     init.method=init_method, # 
+                                     init.method=init_method,
                                      MCMC.runtime.traceplot = FALSE,
                                      MCMC.return.stats = TRUE,
                                      MCMLE.steplength = .25,
