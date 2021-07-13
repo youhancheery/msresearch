@@ -1,16 +1,22 @@
 \documentclass[10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[parfill]{parskip}
-\usepackage[numbers, square]{natbib}
+\usepackage[round]{natbib}
 \usepackage[legalpaper, portrait, margin=1in]{geometry}
 \usepackage{amsmath}
-
+\usepackage{setspace}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+%%
 \title{Benchmarking Equilibrium Expectation as an Estimation Method for Exponential Random Graph Models}
 \author{Youhan Cheery}
 \date{\today}
 
 \begin{document}
 \maketitle
+\pagebreak
+\tableofcontents
+\pagebreak
 
 \input{abstract.tex}
 
@@ -20,9 +26,13 @@
 
 \input{method.tex}
 
+\input{results.tex}
+
 \input{notes.tex}
 
-\bibliographystyle{apalike}
+\input{appendix.tex}
+
+\bibliographystyle{plainnat}
 \bibliography{references}
 
 \end{document}

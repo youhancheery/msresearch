@@ -1,14 +1,24 @@
 \section{Introduction}
-
+\label{introduction}
 \begin{itemize}
 \item Mention something about ERGMs and how they're used
 \item This includes the math side - and about network statistics
 \item Talk a little about the intractable denominator when it comes to ERGM estimation
 \item Computational challenges in ERGMs
 \end{itemize}
-
-Exponential Random Graph models take the form:
+%%
+Exponential family models find a wide variety of use: from social networks, to spatial statistics, to even image analysis. Exponential Random Graph Models (ERGMs) take the form:
 
 \begin{equation}
 \pi(x, \boldsymbol{\theta}) = \frac{1}{k(\boldsymbol{\theta})}\exp{\left(\sum_A{\theta_Az_A(x)}\right)}
 \end{equation}
+
+Where $z_A(x)$ are the statistics that define the network, $\theta_A$ are the parameters of the network, and $k(\theta)$ is the normalising constant. 
+
+Due to this normalising constant often being intractable, parameter calculation approaches have needed to find a way around this summation of network statistics over all possible networks. Strauss and Ikeda in 1991 confronted this challenge by approximating the maximum likelihood form with an approximated form, or a `pseudo maximum likelihood'. Using traditional maximum likelihood calculations Strauss and Ikeda then estimate the underlying parameter values. This method had drawbacks of its own: as it's namesake implies, the estimate was calculated for an approximation of the maximum likelihood equation of the network, and not the true likelihood itself. This meant that the possibility of erroneously selecting parameters that defined the observed network came with additional uncertainty. 
+
+With the advent of computation storage and power, Markov Chain approaches became viable ways of reaching the solution to optimisation problems iteratively. These methods used sampling techniques to gradually direct the model to the maximum likelihood estimate at the global minima. Beginning with Roberts and Munro in 1951 with the Stochastic Approximation method that sought to iteratively reach the parameters by the Newton-Raphson method. The relevance of Robberts and Munro's methods were extended to ERGMs by Sneijders in 2002, and onwards to Equilibrium Expectation in 2018 by Stivala et. al. 
+
+In this work, we implement the equilibrium expectation algorithm (\cite{eqexpectation}) in the R package \texttt{ergm} (\cite{ergm}) and benchmark the implementation to ERGM parameter estimation and compare it to the existing Monte Carlo Maximum Likelihood approaches of Robbins-Monro (\cite{robbinsmonro1951}) and Stochastic Approximation (\cite{snijders2002}). The implementation of the equilibrium expectation algorithm is important in this case, given that the methods used for comparison are themselves being run from the ERGM R package. Finally, we compare estimates using each method, using the \textit{E. coli} transcriptional regulation network, and \textit{Kapferers} sociational dataset as illustrated by \cite{hummels2012}.
+
+We consider the computational tractibility of the MCMC-based approaches by considering three different starting points: starting from all parameters being set to zero, from the MPLE, and from a mostly zero starting point sans having values at the edges of the network pre-calculated with a run of \texttt{ergm} at default settings. 
