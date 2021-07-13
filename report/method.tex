@@ -1,0 +1,38 @@
+\section{Method}
+
+%After implementing the Equilibrium Expectation algorithm and ensuring that is producing reliable estimates we will then implement the following testing strategy:
+
+Before considering analysis methodology, for an equivalent comparison of Equilibrium Expectation to other estimation methods, we must first implement Stivala's algorithm within the Statnet \texttt{ergm} package by \cite{ergm}. 
+
+% is there any value in talking about implementation here?
+
+The methods we will be benchmarking against are mentioned in Section \ref{introduction} and detailed in Section \ref{literature_review}.
+
+To begin, we use the models used by \cite{hummels2012} to compare the effectiveness of Equilibrium Expectation against MCMLE and Stochastic-Approximation as implemented in \texttt{ergm} under different combinations of hyperparameters, such as starting point, while controlling for other hyperparameters such as burn-in. The datasets we use to compare estimation algorithms are the E. Coli dataset for protein location sites, as well as Kapferer's Zambian tailor shop. For more detail on the datasets refer to Appendix \ref{ecoli} and \ref{kapferer} respectively.
+
+We consider four models:
+
+\begin{lstlisting}
+ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE)
+ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1)
+kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE)
+kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE)
+\end{lstlisting}
+
+<reason for why we had each of these equations>
+
+For each of the network, we then considered three different starting point configurations across each of the three aforementioned estimation methods:
+\begin{enumerate}
+\item Starting from a parameter vector of all zeros, i.e. $\boldsymbol{\theta_0} = \boldsymbol{0}$.
+\item Starting from the maximum pseudo-likelihood estimate.
+\item Starting from a parameter vector of mostly zeros, except for the edges of the network which were calculated beforehand with a run of the network at the edges only.
+\end{enumerate}
+
+\begin{enumerate}
+\item Estimate parameters on the same dataset using EE, RM, and MCMCMLE
+\item Modify the starting points of the algorithm
+\item Test a missing data implementation
+\end{enumerate}
+
+What constitutes a more effective "algorithm"?
+
