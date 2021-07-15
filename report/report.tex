@@ -1,4 +1,4 @@
-\documentclass[10pt]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[parfill]{parskip}
 \usepackage[round]{natbib}
@@ -7,7 +7,16 @@
 \usepackage{setspace}
 \usepackage[toc,page]{appendix}
 \usepackage{listings}
-%%
+\usepackage{mathtools}
+\usepackage{titlesec}
+
+%\onehalfspacing
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
 \title{Benchmarking Equilibrium Expectation as an Estimation Method for Exponential Random Graph Models}
 \author{Youhan Cheery}
 \date{\today}

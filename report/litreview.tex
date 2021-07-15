@@ -1,29 +1,15 @@
-\section{Literature Review}  
+\section{Literature Review}
+\label{literature_review}
 
-In order to benchmark the Equilibrium Expectation estimation method we start by considering the two classes from which currently popular estimation techniques lie: stochastic approximation and Monte Carlo Maximum Likelihood Estimation.
+In order to benchmark the Equilibrium Expectation estimation method we use the Robbins-Monro algorithm as well as the later work by extension of this process known as Stochastic Approximation. The aforementioned estimation approaches are detailed in this section, focusing largely on the philosophy of each algorithm reaching meaningful estimates.
 
-\subsection{Stochastic Approximation}
+We specifically note that the these techniques sought the ``actual'' MLE, though it is worth beginning our discussion with the Maximum Pseudo Likelihood Estimation (MPLE) method (\cite{straussikeda1990}) as we use this method as an initialisation point for some of our benchmarking.
 
-Stochastic Approximation methods were among the first approaches to estimating the ERGM parameters by finding the actual MLE. First introduced by \citeauthor{robbinsmonro1951} in 1951, the stochastic approximation method aims to iteratively find the roots of an optimisation function as represented by an expected value. For a root proposed root $\hat{\theta}$ the \citeauthor{robbinsmonro1951} algorithms states that $\lim_{\hat{\theta_n} \rightarrow \inf} = \theta$, the true root. This is done by iterating through 
-
-\begin{equation}
-\label{eqn:rm_update}
-\theta_{n+1} = \theta_{n} - \alpha_n(N(\theta) - \alpha)
-\end{equation}
-
-Where 
-
-
-In the context of ERGMs, this is ...
-
-Implemented in 2002 by Snijders...
-
-
-We specifically note that the these techniques sought the ``actual'' MLE, as it is worth beginning our discussion with the Maximum Pseudo Likelihood Estimation of ERGM parameters \citet{straussikeda1990}.
+\subsection{Maximum Pseudo-Likelihood Estimation}
 
 %strauss+ikeda1990
 
-Due to the normalising constant, generating the parameters of the ERGM is usually intractable. \citeauthor{straussikeda1990} proposed an approach where calculating the maximum likelihood function wasn't done on the direct likelihood, rather on a 'pseudo' likelihood.
+Due to the normalising constant referred to in Section \ref{introduction} being a summation over parameters of all possible graphs, estimating the true parameters of the ERGM is often an intractable problem. \citeauthor{straussikeda1990} proposed an approach where calculating the maximum likelihood function wasn't done on the direct likelihood but rather on a 'pseudo' likelihood which approximated the true underlying model.
 
 For a dyad independent network model, that is, a model where every dyad (or pair of ties) is independent from the next - maximum likelihood can be calculated. While this assumption simplifies the mathematics of estimation, it limits the practicality of the network model greatly. For dyad dependent networks, \citeauthor{straussikeda1990} proposed the pseudo-likelihood as the product of the probabilities of the $y_{ij}$, with each of the probabilities conditional on the rest of the data \citet{straussikeda1990}.
 
@@ -44,18 +30,129 @@ Conditioning on the rest of the graph produces a model form that now does not de
     logit(Pr(y_{ij} = 1|C) = \theta'\delta x_{ij}
 \end{aligned}
 \end{equation}
-%sneijders2002
+
+\subsection{Markov Chain Methods For Parameter Estimation}
+
 \subsection{Monte Carlo Maximum Likelihood Estimation (MCMLE)}
+
+The Monte Carlo Maximuim Likelihood Estimate was first introduced by \cite{geyerthompson1992}, and subsequently extended to curved ERGMs by \cite{hunterhandcock2006}. MCMLE is a method developed as a consequence to the fact that the  Laplace transformations (or normalising constants as is often used in this paper) for exponential family models with dependent data cannot be exactly calculated, and approximations are difficult to find. As such, the general idea comes down to translating from the intractable integral, to a probability distribution such that Monte Carlo methods become applicable, as shown with the method of moments equation below:
+
+\begin{equation}
+M_\theta(t) = \int{exp<t(x), \tau>}dP_\theta(x) = \frac{c(\theta + t)}{c(\theta)}
+\end{equation}
+
+Where $t(x)$ are canonical statistics, and $P_\theta$ denoting the measure having density $f$ with respect to $\mu$.
+
+The above refers to the ``Monte Carlo'' side of the eponymous section. Standard Gibbs or Metropolis sampling methods are used to generate an ergodic Markov chain $X_1$, $X_2$, ... having equilibrium distribution $P_\theta$. This leads to the observation that
+
+\begin{equation}
+\label{eq:mcmle_importance_sampling}
+d_n(\theta') =  \frac{1}{n}\Sigma_{i=1}^n exp{<t(x_i), \theta' - \theta>} \rightarrow d(\theta) = \frac{c(\theta')}{c(\theta)}
+\end{equation}
+
+almost surely by the ergodic theorem. For a given observation $x$ the log likelihood can be written as
+
+\begin{equation}
+I_x(\theta) = log(f_\theta(x)) + log(c(\theta)) = <t(x), \theta> - log(d(\theta))
+\end{equation}
+
+which has a Monte Carlo approximation given by 
+
+\begin{equation}
+I_{n,x}(\theta) = <t(x), \theta> - log(d_n(\theta))
+\end{equation}
+
+Then, for any fixed $\theta$,
+
+\begin{equation}
+I_{n,x}(\theta) \rightarrow I_x(\theta)
+\end{equation}
+
+almost surely by expression \ref{eq:mcmle_importance_sampling}. Thus, under the concavity of $I_{n,x}(\theta)$ and $I_x(\theta)$ (a consequence of the exponential nature of the objective function in this case, though not a not necessary condition for the expression above to be true) we have that 
+
+\begin{equation}
+\hat{\theta}_n \rightarrow \hat{\theta} \text{almost surely}
+\end{equation}
+
+Using simulations from one distribution $P_\theta$ we are able to approximate $\hat{\theta}$ regardless of the intractability of the normalising constant. The algorithm is iterated numerous times, and we note that there is a dependence on a reasonable starting point (i.e. something within the realm of reality). 
+
+%%need to talk about hunter and handcock 2006
+
+\begin{itemize}
+    \item \textbf{Monte Carlo MLE methods}
+\begin{itemize}
+    \item Uses importance sampling integration to find $\frac{\kappa(\theta')}{\kappa(\theta)}$
+    \item Given a sample from the ERGM at point $\theta^{t}$ we then update $\theta^{t+1}$
+    \item There are a number of benefits in using the MCMLE approach - namely that it uses the entire distribution of $y^{\theta^{t}}$ instead of just the first moment, incorporates nonlinear effects on $\theta$ to determine the next guess, and automatically determines the step length = less steps to convergence.
+    \item That said, it is even more susceptible to a bad $\theta^{0}$ guess.
+    \item Can also fail for non-curved ERGMs when the convex hull of the simulated statistic does not contain $g(y^{obs})$ (i think this just means the observed graph itself?)
+    \item Hummel et. al (2012) proposed two ways to address the bad first guess problem. Firstly, assuming $g(Y)$ is log-normal, then $exp[{\eta(\theta') - n(\theta)}^{T}g(Y)]$ is lognormal and we can approximate the expectation such that the maximiser depends only on the first two moments of $y^{\theta^{t}}$ which has a closed form solution for non-curved ERGMs. The second fix is a partial stepping technique that shifts the observed statistic to the centroid of the simulated statistic, reducing the step but preserving its direction. This approach \emph{survives} poor starting values but does not make make immune to them.
+\end{itemize}
+    \item There are two approaches to finding good values for $y^{\theta^{0}}$. One is the maximum pseudo/composite likelihood estimation (MPLE/MCLE) and the second is contrastive divergence. 
+\end{itemize}
+
+\subsubsection{Robbins-Monro/ Stochastic Approximation}
+
+Stochastic Approximation methods were among the first approaches to estimating the ERGM parameters by finding the actual MLE. First introduced by \citeauthor{robbinsmonro1951} in 1951, the stochastic approximation method aims to iteratively find the roots of an optimisation function as represented by an expected value. It does so by iteratively solving equations of the form 
+
+\begin{equation}
+E(Z_\theta) = 0
+\end{equation}
+
+Where $Z_\theta$ are the observed network statistics under the unknown $\theta$.
+
+For a root proposed root $\hat{\theta}$ the \citeauthor{robbinsmonro1951} algorithms states that $\lim_{\hat{\theta_n} \rightarrow \inf} = \theta$, the true root. This is done by iterating through 
+
+\begin{equation}
+\label{eqn:rm_update}
+\theta_{n+1} = \theta_{n} - \alpha_n(N(\theta) - \alpha)
+\end{equation}
+
+
+
+In the context of ERGMs, this is ...
+
+A Markov chain is a sequence of random variables such that the value taken by the random variable only depends upon the value taken by the previous variable. We can hence consider a network in the form of an adjacency matrix in which each entry is a random variable. By switching the values of these variables to 0 or to 1(adding or removing a link from the network) one can generate a sequence of graphs such that each graph only depends upon the previous graph. This would be a Markov chain. The hypothesis is then that if the value at step t is drawn from the correct distribution than so will the value at step t+1. Unlike regular Monte-Carlo methods, the observations that are sampled are close to each-other since they vary by a single link. However, one would need a method for selecting which variable should change state in order to get closer to the MLE, this is done using the Metropolis-Hastings algorithm or the Gibbs sampler
+
+
+
+%sneijders2002
+
+
+Snijders introduced the Stochastic Approximation as an extension of the original Robbins-Monro algorithm in his paper \cite{snijders2001}. The algorithm in his subsequent paper (\cite{snijders2002}) takes the ideas proposed for this \textit{stochastic actor oriented model} and uses a simplification due to the scaling matrix used in the first phase (itself a matrix of derivatives) can be estimated using the covariance matrix of the generated statistics rather than by a finite quotient difference.
+% ^rephrase
 
 Due to the normalising constant in ERGMs $k\boldsymbol{\theta}$ typically being unknown, the means of estimating the probability distribution remains an intractable problem. And while stochastic approximation can be used to estimate the parameters, the rise of computing power has meant Markov Chain Monte Carlo MCMC simulation is typically used to address the value of $k\boldsymbol{\theta}$ (and the MLE as a whole).
 
 Using MCMC estimation typically via the Metropolis-Hastings algorithm estimates network parameters by using the Markov process that asymptotically reaches a unique stationary distribution. A new state, $x'$ is proposed with some probability given by $q(x \rightarrow x'$. 
 
+
+Snijder's algorithm consists of three main phases, with each phase adopting the Metropolis-Hastings sampling approach to draw from the model. Before diving into each of the phases, the developer has control on two parameters at this stage: the burn-in, and the gain factor. The burn in is a MCMC-specific hyperparameter and needs to be set for any MCMC-based method, while the gain factor controls the size of the steps the algorithm takes in reaching the MLE. A large gain factor means reaching the general vicinity of the MLE quicker, albeit with less `precise' movements. 
+
+\paragraph{Phase 1: Initialisation}
+
+The goal of Stochastic Approximation's first phase is to determine the scaling matrix $D_0$ and the initial values of the parameters being estimated using a small number of steps. The scaling matrix is used to scale the updates of the different elements of the parameter vector. At the end of the first phase, there is an optional initiation of the Newton-Raphson process (used in the subsequent step), $\hat{\theta}^{(N_1)} = \theta^{(1)} - \alpha_1 D^{-1}(\bar{u} - u_0)$ where the values $D$ and $\bar{u}$ are respectively defined as
+
+\paragraph{Phase 2: Optimisation}
+
+The second phase is the main phase of Stochastic Approximation, with a number of subphases each containing several iterations used to calculate $Y(n)$ according to the current parameter value $\hat{\theta}^{(n)}$. After of these minor iterations, the $\theta$ is updated according to the equation
+
+\begin{equation}
+\hat{\theta}^{(n+1)} = \hat{\theta}^{(n)} - \alpha_nD_0^{-1}Z(n)
+\end{equation}
+
+Where $\alpha_n$ is a constant consistent through each subphase, and $Z_k(n) = P(n)u(1-Y(n)) + (1 - P(n))u(Y(n)) - u_0$. At the end of each of these subphases, the algorithm estimates a new value for $\theta^{(n)}$, with the final estimate, $\hat{\theta}$, being the average of the $\theta^{(n)}$ estimated at the final subphase. 
+
+Note that with each subphase, the value of $\alpha_n$ is halved, so that the steps become incrementally smaller with more iterations (i.e. the algorithm makes smaller, more 'careful' steps as it reaches the final $\hat{\theta}$).
+
+\paragraph{Phase 3: Conversion check and measurement calculation}
+
+As the previous phase calculated the final value for $\hat{\theta}$, the final phase of Stochastic Approximation seeks to estimate the covariance matrix of the estimator and $\Sigma(\theta)$. 
+
+
 % why do we reach a unique stationary distribution?
 \subsection{Equilibrium Expectation}
 
-The focus of this paper, the equilibrium expectation algorithm by \citet{eqexpectation} proposes a fast algorithm for exponential random graph model parameters using maximum likelihood estimation which in turn affords an increase in the scale of the network being estimated. The "fast" and "scalable" nature of the equilibrium expectation algorithm are a consequence of the 
+The focus of this paper, the equilibrium expectation algorithm by \cite{eqexpectation} proposes a fast algorithm for exponential random graph model parameters using maximum likelihood estimation which in turn affords an increase in the scale of the network being estimated. The fast and scalable nature of the equilibrium expectation algorithm are a consequence of the 
 
-For a general MCMC algorithm (such as Metropolis-Hastings), once equilibrium is reached, we have that for all statistics $\sum_{x,x'}\pi(x, \boldsymbol{\theta})P(x \rightarrow x', \boldsymbol{\theta})(Z_A(x') - z_A(x)) = 0$. In contrast, EE replaces this algorithm which must converge for every simulated network $x_s(\boldsymbol{\theta})$ (making the entire estimation computationally quite expensive) with $E_{\pi(\boldsymbol{\theta})}(\DeltaZ_A(x, \boldsymbol{\theta}))$. This implies for a network drawn from a probability distribution $\pi(x, \boldsymbol{\theta})$
-
-\subsection{Techniques for handling Missing Data}
+% For a general MCMC algorithm (such as Metropolis-Hastings), once equilibrium is reached, we have that for all statistics $\sum_{x,x'}\pi(x, \boldsymbol{\theta})P(x \rightarrow x', \boldsymbol{\theta})(Z_A(x') - z_A(x)) = 0$. In contrast, EE replaces this algorithm which must converge for every simulated network $x_s(\boldsymbol{\theta})$ (making the entire estimation computationally quite expensive) with $E_{\pi(\boldsymbol{\theta})}(\DeltaZ_A(x, \boldsymbol{\theta}))$. This implies for a network drawn from a probability distribution $\pi(x, \boldsymbol{\theta})$
