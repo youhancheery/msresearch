@@ -31,14 +31,14 @@ Conditioning on the rest of the graph produces a model form that now does not de
 \end{aligned}
 \end{equation}
 
-\subsection{Markov Chain Methods For Parameter Estimation}
+\subsection{Methods for Parameter Estimation}
 
-\subsection{Monte Carlo Maximum Likelihood Estimation (MCMLE)}
+\subsubsection{Monte Carlo Maximum Likelihood Estimation (MCMLE)}
 
 The Monte Carlo Maximuim Likelihood Estimate was first introduced by \cite{geyerthompson1992}, and subsequently extended to curved ERGMs by \cite{hunterhandcock2006}. MCMLE is a method developed as a consequence to the fact that the  Laplace transformations (or normalising constants as is often used in this paper) for exponential family models with dependent data cannot be exactly calculated, and approximations are difficult to find. As such, the general idea comes down to translating from the intractable integral, to a probability distribution such that Monte Carlo methods become applicable, as shown with the method of moments equation below:
 
 \begin{equation}
-M_\theta(t) = \int{exp<t(x), \tau>}dP_\theta(x) = \frac{c(\theta + t)}{c(\theta)}
+M_\theta(t) = \int{exp{\langle t(x), \tau \rangle}dP_\theta(x)} = \frac{c(\theta + t)}{c(\theta)}
 \end{equation}
 
 Where $t(x)$ are canonical statistics, and $P_\theta$ denoting the measure having density $f$ with respect to $\mu$.
@@ -47,19 +47,19 @@ The above refers to the ``Monte Carlo'' side of the eponymous section. Standard 
 
 \begin{equation}
 \label{eq:mcmle_importance_sampling}
-d_n(\theta') =  \frac{1}{n}\Sigma_{i=1}^n exp{<t(x_i), \theta' - \theta>} \rightarrow d(\theta) = \frac{c(\theta')}{c(\theta)}
+d_n(\theta') =  \frac{1}{n}\Sigma_{i=1}^n exp{\langle t(x_i), \theta' - \theta \rangle} \rightarrow d(\theta) = \frac{c(\theta')}{c(\theta)}
 \end{equation}
 
 almost surely by the ergodic theorem. For a given observation $x$ the log likelihood can be written as
 
 \begin{equation}
-I_x(\theta) = log(f_\theta(x)) + log(c(\theta)) = <t(x), \theta> - log(d(\theta))
+I_x(\theta) = log{f_\theta(x)} + log{c(\theta)} = \langle t(x), \theta \rangle - log{d(\theta)}
 \end{equation}
 
 which has a Monte Carlo approximation given by 
 
 \begin{equation}
-I_{n,x}(\theta) = <t(x), \theta> - log(d_n(\theta))
+I_{n,x}(\theta) = \langle t(x), \theta \rangle - log{d_n(\theta)}
 \end{equation}
 
 Then, for any fixed $\theta$,
@@ -151,8 +151,34 @@ As the previous phase calculated the final value for $\hat{\theta}$, the final p
 
 
 % why do we reach a unique stationary distribution?
-\subsection{Equilibrium Expectation}
+\subsubsection{Equilibrium Expectation}
 
-The focus of this paper, the equilibrium expectation algorithm by \cite{eqexpectation} proposes a fast algorithm for exponential random graph model parameters using maximum likelihood estimation which in turn affords an increase in the scale of the network being estimated. The fast and scalable nature of the equilibrium expectation algorithm are a consequence of the 
+The focus of this paper, the equilibrium expectation algorithm by \cite{eqexpectation} proposes a fast algorithm for exponential random graph model parameters using maximum likelihood estimation which in turn affords an increase in the scale of the network being estimated. The fast and scalable nature of the equilibrium expectation algorithm are a consequence of the namesake: relying on properties of Markov chains at equilibrium.
+
+As in the prior methods, estimation of the ERGM parameters is obtained from the method of moments equation
+
+\begin{equation}
+E_{\pi(\theta)}(z_A(x)) = z_A(x_obs)
+\end{equation}
+
+where $z_A(x)$ are the network statistics and $x_{obs}$ is the observed network. 
+
+As before, where the distribution of the normalising constant, $k(\theta)$, is not known, Markov chain Monte Carlo simulation is applied. Using MCMC simulation, we can compute the target probability \ref{eq:ergm_form} as well as the expected properties of the model, $E_{\pi(\theta)}(z_A(x)) = \Sigma_AZ_A(x)\pi(x, \theta)$. 
+
+Using Metropolis-Hastings or other sampling methods (such as Gibbs) the algorithm asymptotically reaches a unique stationary distribution, $\pi(\theta)a$. After MCMC burnin, and the crux of the algorithm (deciding on a next step based on transition probabilities), the MCMC process eventually leads to equilibrium stationary distribution for all statistics $z_A(x)$
+
+\begin{equation}
+\label{eq:stationary_dist}
+\Sigma_{x,x'}\pi(x, \theta)P(x \rightarrow x', \theta)(z_A(x') - z_A(x)) = 0
+\end{equation}
+
+While in other MCMC approaches, whenever a new $x_s(\theta)$ is drawn, the convergence criterion given in equation \ref{eq:stationary_dist} must be satisfied, in EE the convergence criterion is rewritten:
+
+\begin{equation}
+\label{eq:ee_stationary_dist}
+E_{\pi(\theta)(\Delta z_A(x, \theta)) = 0}
+\end{equation}
+
+That is, if the network x is drawn from the stationary distribution $\pi(x,\theta)$ then the expected value in the change statistics $\Delta z_A(x,\theta)$ is zero. In doing so, the much more computationally expensive \ref{eq:stationary_dist} is reduced to a `cheaper' process, noting that \ref{eq:ee_stationary_dist} is only valid at equilibrium. 
 
 % For a general MCMC algorithm (such as Metropolis-Hastings), once equilibrium is reached, we have that for all statistics $\sum_{x,x'}\pi(x, \boldsymbol{\theta})P(x \rightarrow x', \boldsymbol{\theta})(Z_A(x') - z_A(x)) = 0$. In contrast, EE replaces this algorithm which must converge for every simulated network $x_s(\boldsymbol{\theta})$ (making the entire estimation computationally quite expensive) with $E_{\pi(\boldsymbol{\theta})}(\DeltaZ_A(x, \boldsymbol{\theta}))$. This implies for a network drawn from a probability distribution $\pi(x, \boldsymbol{\theta})$

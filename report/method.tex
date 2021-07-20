@@ -1,5 +1,5 @@
 \section{Method}
-%%
+\label{sec:method}
 %After implementing the Equilibrium Expectation algorithm and ensuring that is producing reliable estimates we will then implement the following testing strategy:
 
 Before considering analysis methodology, for an equivalent comparison of Equilibrium Expectation to other estimation methods, we must first implement Stivala's algorithm within the Statnet \texttt{ergm} package by \cite{ergm}. 
@@ -28,8 +28,10 @@ For each of the network, we then considered three different starting point confi
 \item Starting from a parameter vector of mostly zeros, except for the edges of the network which were calculated beforehand with a run of the network at the edges only.
 \end{enumerate}
 
+Due to the nature of each estimation algorithm, the hypothesis is that differences in starting points not only may lead to different points of convergence, but the time taken to convergence may also be different. While Stochastic Approximation and Equilibrium Expectation are similar algorithmically, the steps taken to reach the MLE are noticably different. Stochastic Approximation takes larger steps, while EE squares the change in calcualted statistics leading to shorter, more precise steps. We expect that MCMLE will have a somewhat more challenging time with the starting points at zero and mostly zero sans the edges of the observed network.
+
 \begin{enumerate}
-\item Estimate parameters on the same dataset using EE, RM, and MCMCMLE
+\item Estimate parameters on the same dataset using EE, SA, and MCMCMLE
 \item Modify the starting points of the algorithm
 \item Test a missing data implementation
 \end{enumerate}

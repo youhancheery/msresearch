@@ -9,6 +9,8 @@
 \usepackage{listings}
 \usepackage{mathtools}
 \usepackage{titlesec}
+\usepackage{graphics}
+\usepackage{float}
 
 %\onehalfspacing
 
@@ -23,8 +25,17 @@
 
 \begin{document}
 \maketitle
+\begin{figure}
+\centering
+\includegraphics{portraitcolourpos.eps}
+\end{figure}
+
+
 \pagebreak
 \tableofcontents
+\pagebreak
+\listoftables
+\listoffigures
 \pagebreak
 
 \input{abstract.tex}
@@ -36,6 +47,8 @@
 \input{method.tex}
 
 \input{results.tex}
+
+\input{future_work.tex}
 
 \input{notes.tex}
 

@@ -1,1 +1,178 @@
 \section{Results}
+\label{section:results}
+
+\subsection{Runtimes}
+
+We first look at the runtime differences of the different approaches based on different starting points, under the datasets briefly mentioned in Section \ref{section:method} and detailed in Appendices \ref{ecoli} and \ref{kapferer}. Each subsection to follow will also contain the parameter estimates and a measure of the difference between the method and starting point combinations.
+
+\subsubsection{E. Coli (no self-loop)}
+
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Starting Point & User & System & Elapsed \\
+ \hline\hline
+ zeros & 21.052 & 0.025 & 21.099 \\ 
+ \hline
+ zeros and edges & 6.763 & 0.004 & 6.777 \\
+ \hline
+ MPLE & 17.863 & 0.027 & 17.897 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli1_ee}
+ \caption{E. Coli dataset run-times with various starting point configurations using EE as the estimation method}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{||c | c | c | c | c||}
+ \hline
+ Starting Point & User & System & Elapsed \\ 
+ \hline
+ zeros & 21.134 & 0.087 & 21.795 \\
+ \hline
+ zeros and edges & 896.263 & 0.264 & 897.086 \\ 
+ \hline
+ MPLE & 17.572 & 0.027 & 17.610 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli1_sa}
+ \caption{E. Coli dataset run-times with various starting point configurations using SA as the estimation method}
+ \end{table}
+
+\begin{table}[!ht]
+\centering
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Starting Point & User & System & Elapsed \\ 
+ \hline
+ zeros & 301.087 & 3.712 & 373.466 \\
+ \hline
+ zeros and edges & 46.978 & 3.267 & 373.466 \\ 
+ \hline
+ MPLE & 43.854 & 3.185 & 125.712 \\ 
+ \hline
+\end{tabular}
+\label{t:ecoli1_mcmle}
+\caption{E. Coli dataset run-times with various starting point configurations using MCMLE as the estimation method}
+\end{table}
+
+\subsubsection{E. Coli (self-loop)}
+
+\begin{table}[!ht]
+\centering
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Method & Starting Point & User & System & Elapsed \\
+ \hline\hline
+ EE & zeros & 22.007	 & 0.034 & 22.041 \\ 
+ \hline
+ EE & zeros and edges & 8.160 & 0.002 & 8.155 \\
+ \hline
+ EE & MPLE & 19.046 & 0.043 & 19.098 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli2_ee}
+ \caption{E. Coli dataset with self-loop run times with various starting point configurations and EE as the estimation method}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{||c | c | c | c | c||}
+ \hline
+ SA & zeros & 22.128 & 0.113 & 22.460 \\
+ \hline
+ SA & zeros and edges & 932.005 & 0.493 & 1215.180 \\ 
+ \hline
+ SA & MPLE & 18.799 & 0.094 & 18.933 \\ 
+ \hline
+ \end{tabular}
+ \label{t:ecoli2_sa}
+ \caption{E. Coli dataset with self-loop run times with various starting point configurations and SA as the estimation method}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{||c | c | c | c | c||}
+ \hline
+ MCMLE & zeros & 361.232 & 2.940 & 366.182 \\  
+ \hline
+ MCMLE & zeros and edges & 32.287 & 1.438 & 33.682 \\ 
+ \hline
+ MCMLE & MPLE & 22.193 & 0.835 & 22.816 \\  
+ \hline
+\end{tabular}
+\label{t:ecoli2}
+\caption{E. Coli dataset with self-loop run times with various starting point configurations and MCMLE as the estimation method}
+\end{table}
+
+\subsubsection{Kapferer (no self-loop)}
+
+%\begin{center}
+%\begin{table}
+% \begin{tabular}{||c c c c c c||} 
+% \hline
+% Method & Starting Point & User & System & Elapsed \\ [0.5ex] 
+% \hline\hline
+% EE & zeros & 21.052 & 0.025 & 21.099 \\ 
+% \hline
+% EE & zeros but with edge parameter pre-estimated & 6.763 & 0.004 & 6.777 \\
+% \hline
+% EE & MPLE & 17.863 & 0.027 & 17.897 \\
+% \hline
+% SA & zeros & 21.134 & 0.087 & 21.795 \\
+% \hline
+% SA & zeros but with edge parameter pre-estimated & 896.263 & 0.264 & 897.086 \\ [1ex] 
+% \hline
+% SA & MPLE & 17.572 & 0.027 & 17.610 \\ [1ex] 
+% \hline
+% MCMLE & zeros & 301.087 & 3.712 & 373.466 \\ [1ex] 
+% \hline
+% MCMLE & zeros but with edge parameter pre-estimated & 46.978 & 3.267 & 373.466 \\ [1ex] 
+% \hline
+% MCMLE & MPLE & 43.854 & 3.185 & 125.712 \\ [1ex] 
+% \hline
+%\end{tabular}
+%\label{t:kap1}
+%\caption{Kapferer dataset run-times with various starting point configurations}
+%\end{table}
+%\end{center}
+
+
+\subsubsection{Kapferer (self-loop)}
+
+
+
+%\begin{center}
+%\begin{table}
+% \begin{tabular}{||c c c c c c||} 
+% \hline
+% Method & Starting Point & User & System & Elapsed \\ [0.5ex] 
+% \hline\hline
+% EE & zeros & 21.052 & 0.025 & 21.099 \\ 
+% \hline
+% EE & zeros but with edge parameter pre-estimated & 6.763 & 0.004 & 6.777 \\
+% \hline
+% EE & MPLE & 17.863 & 0.027 & 17.897 \\
+% \hline
+% SA & zeros & 21.134 & 0.087 & 21.795 \\
+% \hline
+% SA & zeros but with edge parameter pre-estimated & 896.263 & 0.264 & 897.086 \\ [1ex] 
+% \hline
+% SA & MPLE & 17.572 & 0.027 & 17.610 \\ [1ex] 
+% \hline
+% MCMLE & zeros & 301.087 & 3.712 & 373.466 \\ [1ex] 
+% \hline
+% MCMLE & zeros but with edge parameter pre-estimated & 46.978 & 3.267 & 373.466 \\ [1ex] 
+% \hline
+% MCMLE & MPLE & 43.854 & 3.185 & 125.712 \\ [1ex] 
+% \hline
+%\end{tabular}
+%\label{t:kap2}
+%\caption{Kapferer dataset with self-loop run-times with various starting point configurations}
+%\end{table}
+%\end{center}
+
+\subsection{Traceplots}
