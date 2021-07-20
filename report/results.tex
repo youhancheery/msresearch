@@ -1,12 +1,11 @@
 \section{Results}
 \label{section:results}
 
-\subsection{Runtimes}
-
 We first look at the runtime differences of the different approaches based on different starting points, under the datasets briefly mentioned in Section \ref{section:method} and detailed in Appendices \ref{ecoli} and \ref{kapferer}. Each subsection to follow will also contain the parameter estimates and a measure of the difference between the method and starting point combinations.
 
-\subsubsection{E. Coli (no self-loop)}
+\subsection{E. Coli (no self-loop)}
 
+\paragraph{Equilibrium Expectation (EE)}
 
 \begin{table}[!ht]
  \centering
@@ -25,6 +24,8 @@ We first look at the runtime differences of the different approaches based on di
  \caption{E. Coli dataset run-times with various starting point configurations using EE as the estimation method}
 \end{table}
 
+\paragraph{Stochastic Approximation (SA)}
+
 \begin{table}[!ht]
 \centering
 \begin{tabular}{||c | c | c | c | c||}
@@ -41,6 +42,8 @@ We first look at the runtime differences of the different approaches based on di
  \label{t:ecoli1_sa}
  \caption{E. Coli dataset run-times with various starting point configurations using SA as the estimation method}
  \end{table}
+
+\paragraph{Markov Chain Maximum Likelihood Estimator (MCMLE)}
 
 \begin{table}[!ht]
 \centering
@@ -59,7 +62,9 @@ We first look at the runtime differences of the different approaches based on di
 \caption{E. Coli dataset run-times with various starting point configurations using MCMLE as the estimation method}
 \end{table}
 
-\subsubsection{E. Coli (self-loop)}
+\subsection{E. Coli (self-loop)}
+
+\paragraph{Equilibrium Expectation (EE)}
 
 \begin{table}[!ht]
 \centering
@@ -78,6 +83,8 @@ We first look at the runtime differences of the different approaches based on di
  \caption{E. Coli dataset with self-loop run times with various starting point configurations and EE as the estimation method}
 \end{table}
 
+\paragraph{Stochastic Approximation (SA)}
+
 \begin{table}[!ht]
 \centering
 \begin{tabular}{||c | c | c | c | c||}
@@ -92,6 +99,8 @@ We first look at the runtime differences of the different approaches based on di
  \label{t:ecoli2_sa}
  \caption{E. Coli dataset with self-loop run times with various starting point configurations and SA as the estimation method}
 \end{table}
+
+\paragraph{Markov Chain Maximum Likelihood Estimator (MCMLE)}
 
 \begin{table}[!ht]
 \centering
@@ -108,7 +117,7 @@ We first look at the runtime differences of the different approaches based on di
 \caption{E. Coli dataset with self-loop run times with various starting point configurations and MCMLE as the estimation method}
 \end{table}
 
-\subsubsection{Kapferer (no self-loop)}
+\subsection{Kapferer (no gwdsp)}
 
 %\begin{center}
 %\begin{table}
@@ -141,7 +150,7 @@ We first look at the runtime differences of the different approaches based on di
 %\end{center}
 
 
-\subsubsection{Kapferer (self-loop)}
+\subsection{Kapferer (self-loop)}
 
 
 
@@ -175,4 +184,3 @@ We first look at the runtime differences of the different approaches based on di
 %\end{table}
 %\end{center}
 
-\subsection{Traceplots}
