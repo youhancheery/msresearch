@@ -1,15 +1,15 @@
 \section{Literature Review}
 \label{literature_review}
 
-In order to benchmark the Equilibrium Expectation estimation method we use the Robbins-Monro algorithm as well as the later work by extension of this process known as Stochastic Approximation. The aforementioned estimation approaches are detailed in this section, focusing largely on the philosophy of each algorithm reaching meaningful estimates.
+In order to benchmark the computational and accuracy of Equilibrium Expectation as an ERGM estimation method we use the Stochastic Approximation and Markov Chain Maximum Likelihood Estimator as the basis. The aforementioned estimation approaches are detailed in this section, focusing largely on the philosophy of each algorithm reaching meaningful estimates.
 
-We specifically note that the these techniques sought the ``actual'' MLE, though it is worth beginning our discussion with the Maximum Pseudo Likelihood Estimation (MPLE) method (\cite{straussikeda1990}) as we use this method as an initialisation point for some of our benchmarking.
+We specifically note that though these techniques sought the ``actual'' MLE, it is worth beginning our discussion with the Maximum Pseudo Likelihood Estimation (MPLE) method (\cite{straussikeda1990}) as we use this method as one of the starting points in our benchmarking analysis.
 
-\subsection{Maximum Pseudo-Likelihood Estimation}
+\subsection{Maximum Pseudo-Likelihood Estimation and choice of starting point}
 
 %strauss+ikeda1990
 
-Due to the normalising constant referred to in Section \ref{introduction} being a summation over parameters of all possible graphs, estimating the true parameters of the ERGM is often an intractable problem. \citeauthor{straussikeda1990} proposed an approach where calculating the maximum likelihood function wasn't done on the direct likelihood but rather on a 'pseudo' likelihood which approximated the true underlying model.
+Due to the normalising constant referred to in Section \ref{introduction} being a summation over parameters of all possible graphs, estimating the true parameters of the ERGM is often an intractable problem. \citeauthor{straussikeda1990} proposed an approach where calculating the maximum likelihood function wasn't done on the direct likelihood but rather on a `pseudo' likelihood which approximated the true underlying model.
 
 For a dyad independent network model, that is, a model where every dyad (or pair of ties) is independent from the next - maximum likelihood can be calculated. While this assumption simplifies the mathematics of estimation, it limits the practicality of the network model greatly. For dyad dependent networks, \citeauthor{straussikeda1990} proposed the pseudo-likelihood as the product of the probabilities of the $y_{ij}$, with each of the probabilities conditional on the rest of the data \citet{straussikeda1990}.
 
@@ -21,14 +21,13 @@ When not conditioning on data, the ERGM takes the log linear form
 \end{equation}
 where $\theta$ is a vector of parameters and x(G) is a vector of graph statistics (on the observed graph).
 
-Conditioning on the rest of the graph produces a model form that now does not depend on $\theta$
+Conditioning on the rest of the graph produces a model form that now does not depend on $\theta$:
+
 \begin{equation}
-\begin{aligned}
-    Pr(y_{ij} = 1|C) = \frac{Pr(G^-)}{Pr(G^-) + Pr(G^+)} \\
-    logit(Pr(y_{ij} = 1|C) = \theta'{x(G^+) - x(G^-)} \\
-    \label{eqn:ergm_no_theta}
-    logit(Pr(y_{ij} = 1|C) = \theta'\delta x_{ij}
-\end{aligned}
+\label{eqn:ergm_no_theta}
+P(y_{ij} = 1|C) = \frac{Pr(G^-)}{Pr(G^-) + Pr(G^+)} \\
+logit(Pr(y_{ij} = 1|C) = \theta'{x(G^+) - x(G^-)} \\
+logit(Pr(y_{ij} = 1|C) = \theta'\delta x_{ij}
 \end{equation}
 
 \subsection{Methods for Parameter Estimation}
