@@ -25,9 +25,11 @@ Conditioning on the rest of the graph produces a model form that now does not de
 
 \begin{equation}
 \label{eqn:ergm_no_theta}
+\begin{aligned}
 P(y_{ij} = 1|C) = \frac{Pr(G^-)}{Pr(G^-) + Pr(G^+)} \\
 logit(Pr(y_{ij} = 1|C) = \theta'{x(G^+) - x(G^-)} \\
 logit(Pr(y_{ij} = 1|C) = \theta'\delta x_{ij}
+\end{aligned}
 \end{equation}
 
 \subsection{Methods for Parameter Estimation}
@@ -58,10 +60,11 @@ I_x(\theta) = log{f_\theta(x)} + log{c(\theta)} = \langle t(x), \theta \rangle -
 which has a Monte Carlo approximation given by 
 
 \begin{equation}
+\label{eq:log-likelihood-ratio}
 I_{n,x}(\theta) = \langle t(x), \theta \rangle - log{d_n(\theta)}
 \end{equation}
 
-Then, for any fixed $\theta$,
+We see that Geyer and Thompson consider the log-likelihood ratio $I_{n,x}(\theta)$ at a fixed parameter choice rather than maximising the log-likelihood alone. Then, for any fixed $\theta$,
 
 \begin{equation}
 I_{n,x}(\theta) \rightarrow I_x(\theta)
@@ -73,22 +76,38 @@ almost surely by expression \ref{eq:mcmle_importance_sampling}. Thus, under the 
 \hat{\theta}_n \rightarrow \hat{\theta} \text{almost surely}
 \end{equation}
 
-Using simulations from one distribution $P_\theta$ we are able to approximate $\hat{\theta}$ regardless of the intractability of the normalising constant. The algorithm is iterated numerous times, and we note that there is a dependence on a reasonable starting point (i.e. something within the realm of reality). 
+Using simulations from one distribution $P_\theta$ we are able to approximate $\hat{\theta}$ regardless of the intractability of the normalising constant. The algorithm has a large dependence on initialising with a reasonable starting point (i.e. something within the realm of reality), which sometimes means requiring a (sometimes infeasibly) large number of Monte Carlo samples. \cite{ergm} demonstrates the sensitivity to starting estimates by applying the MCMLE estimation method to the Sampson Monastery dataset, a dataset with 18 actors and 88 out of 306 possible ties. With a model based on edge count, and a starting point $\theta^0$ of 1, Hunter et al. shows that the model struggles to obtain the MLE in a single iteration, which wouldn't have been the case with a more reasonable starting estimate closer to the (already known) MLE. 
+
+In addition, if the first derivative of the log-likelihood ratio in expression \ref{eq:log-likelihood-ratio} with respect to $\theta$ is negative (i.e. $g(Y) < g(Y_{obs})$) then \ref{eq:log-likelihood-ratio} will not have a maximum. Again, with a better starting estimate, this isn't likely to be the case but illustrates the sensitivity to challenging starting point estimates.
 
 %%need to talk about hunter and handcock 2006
+In his 2006 paper, Hancock applies the methods discussed in \cite{geyerthompson1992}:
 
-\begin{itemize}
-    \item \textbf{Monte Carlo MLE methods}
-\begin{itemize}
-    \item Uses importance sampling integration to find $\frac{\kappa(\theta')}{\kappa(\theta)}$
-    \item Given a sample from the ERGM at point $\theta^{t}$ we then update $\theta^{t+1}$
-    \item There are a number of benefits in using the MCMLE approach - namely that it uses the entire distribution of $y^{\theta^{t}}$ instead of just the first moment, incorporates nonlinear effects on $\theta$ to determine the next guess, and automatically determines the step length = less steps to convergence.
-    \item That said, it is even more susceptible to a bad $\theta^{0}$ guess.
-    \item Can also fail for non-curved ERGMs when the convex hull of the simulated statistic does not contain $g(y^{obs})$ (i think this just means the observed graph itself?)
-    \item Hummel et. al (2012) proposed two ways to address the bad first guess problem. Firstly, assuming $g(Y)$ is log-normal, then $exp[{\eta(\theta') - n(\theta)}^{T}g(Y)]$ is lognormal and we can approximate the expectation such that the maximiser depends only on the first two moments of $y^{\theta^{t}}$ which has a closed form solution for non-curved ERGMs. The second fix is a partial stepping technique that shifts the observed statistic to the centroid of the simulated statistic, reducing the step but preserving its direction. This approach \emph{survives} poor starting values but does not make make immune to them.
-\end{itemize}
-    \item There are two approaches to finding good values for $y^{\theta^{0}}$. One is the maximum pseudo/composite likelihood estimation (MPLE/MCLE) and the second is contrastive divergence. 
-\end{itemize}
+The MLE $\boldsymbol{\hat{\theta}}$ satisfies the equation
+
+\begin{equation}
+\nabla l(\hat{\theta}) = \nabla \eta(\hat{\theta})^t [Z(y_{obs}) - E_{\eta(\hat{theta})}Z(Y) = 0
+\end{equation}
+%what is eta
+Where $\nabla \eta(\hat{\theta})$ is a matrix of partial derivatives of $\eta$ with respect to $\theta$.
+
+Noting that the exponential family form of the models makes the Fisher information matrix 
+
+\begin{equation}
+I(\theta) = \nabla \eta(\theta)^t[var_{\nabla \eta(\theta)}Z(Y)]\nabla \eta(\theta)
+\end{equation}
+
+It is easier to calculate than the Hessian matrix of second derivatives as in the Newton-Raphson method as used by Stochastic Approximation. The, we calculate iterations of the parameter $\theta$ as
+
+\begin{equation}
+\theta^{k+1} = \theta^{(k)} + [I(\theta^(k))]^{-1} \nabla l(\theta^{(k)})
+\end{equation}
+
+%%%%
+
+The MCMC-MLE is theoretically expected to converge to the maximum likelihood assuming it exists.
+
+
 
 \subsubsection{Robbins-Monro/ Stochastic Approximation}
 
@@ -157,12 +176,12 @@ The focus of this paper, the equilibrium expectation algorithm by \cite{eqexpect
 As in the prior methods, estimation of the ERGM parameters is obtained from the method of moments equation
 
 \begin{equation}
-E_{\pi(\theta)}(z_A(x)) = z_A(x_obs)
+E_{\pi(\theta)}(z_A(x)) = z_A(x_{obs})
 \end{equation}
 
 where $z_A(x)$ are the network statistics and $x_{obs}$ is the observed network. 
 
-As before, where the distribution of the normalising constant, $k(\theta)$, is not known, Markov chain Monte Carlo simulation is applied. Using MCMC simulation, we can compute the target probability \ref{eq:ergm_form} as well as the expected properties of the model, $E_{\pi(\theta)}(z_A(x)) = \Sigma_AZ_A(x)\pi(x, \theta)$. 
+As before, where the distribution of the normalising constant, $k(\theta)$, is not known, Markov chain Monte Carlo simulation is applied. Using MCMC simulation, we can compute the target probability given by expression \ref{eq:ergm_form} as well as the expected properties of the model, $E_{\pi(\theta)}(z_A(x)) = \Sigma_AZ_A(x)\pi(x, \theta)$. 
 
 Using Metropolis-Hastings or other sampling methods (such as Gibbs) the algorithm asymptotically reaches a unique stationary distribution, $\pi(\theta)a$. After MCMC burnin, and the crux of the algorithm (deciding on a next step based on transition probabilities), the MCMC process eventually leads to equilibrium stationary distribution for all statistics $z_A(x)$
 
@@ -175,9 +194,30 @@ While in other MCMC approaches, whenever a new $x_s(\theta)$ is drawn, the conve
 
 \begin{equation}
 \label{eq:ee_stationary_dist}
-E_{\pi(\theta)(\Delta z_A(x, \theta)) = 0}
+E_{\pi(\theta)}(\Delta z_A(x, \theta)) = 0
 \end{equation}
 
 That is, if the network x is drawn from the stationary distribution $\pi(x,\theta)$ then the expected value in the change statistics $\Delta z_A(x,\theta)$ is zero. In doing so, the much more computationally expensive \ref{eq:stationary_dist} is reduced to a `cheaper' process, noting that \ref{eq:ee_stationary_dist} is only valid at equilibrium. 
 
+On the assumption that a number of simulated networks exists, the left hand side of the stationary distribution \ref{ee_stationary_dist} can be calculated by Monte Carlo integration
+
+%\begin{equation}
+%\label{eq:ee_mc_int}
+%\frac{1}{n} \Simga_i \Delta Z_A(x_{s_{i}}, \theta) = 0
+%\end{equation}
+
+Typically we estimate the value of $\theta^*$ by averaging the result of each estimated $\theta_{s_{i}}$ of an observed network $x_{s_{i}}$, a la $\hat{\theta*} = \frac{1}{n}\Sigma_i \theta(x_s)$. If the network $x_s$ is very large, then by the ergodicity of systems we can estimate $\theta*$ using $f_A(x_{obs}, \theta) = 0$ (\cite{stivala2018}), dropping the summation necessitated by MC integration. Thus, the true estimate for $\theta*$ can be found from the equilibrium expectation condition for all A,
+
+\begin{equation}
+\label{eq:ee}
+\Delta z_A(x_s, \theta^{EE}) = 0 
+\end{equation}
+
+where the change statistic can be found by $\Delta z_a(x, \theta) = \Sigma_x' P(x \rightarrow x', \theta) (z_A(x') - z_A(x))$. \textit{If} the observed network $x_s$ is very large, then $\theta^{EE}(x_s)$ is the desired estimate for $\theta*$. Otherwise we require a large sample of networks to calculate the summation terms in the above expressions. 
+
+
+Of course, in reality we only have one $x_{obs}$ drawn from some unknown probability distribution, $\pi*(x)$. Networks can be drawn from this unknown distribution by MCMC simulations, meaning we can then iteratively adjust $\theta$ until expression \ref{eq:ee} is satisfied. In contrast to methods described above (and others not described), the EE algorithm does not draw as many simulated networks for various $\theta$ values, making it noticeably quicker. A root finding method is still required once we have reached $\theta^{EE}$ that satisfies expression \ref{eq:ee} such as stochastic approximation methods (which we indeed use in the implementation of EE in \texttt{ergm} for the purpose of benchmarking).
+
 % For a general MCMC algorithm (such as Metropolis-Hastings), once equilibrium is reached, we have that for all statistics $\sum_{x,x'}\pi(x, \boldsymbol{\theta})P(x \rightarrow x', \boldsymbol{\theta})(Z_A(x') - z_A(x)) = 0$. In contrast, EE replaces this algorithm which must converge for every simulated network $x_s(\boldsymbol{\theta})$ (making the entire estimation computationally quite expensive) with $E_{\pi(\boldsymbol{\theta})}(\DeltaZ_A(x, \boldsymbol{\theta}))$. This implies for a network drawn from a probability distribution $\pi(x, \boldsymbol{\theta})$
+
+

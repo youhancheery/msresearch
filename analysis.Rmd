@@ -93,23 +93,37 @@ Kapferer models have no MCMLE method right now since it doesn;t seem to be worki
 
 ```{r kapferer1-models, eval=FALSE, include=FALSE}
 
-# # stochastic approximation
-# kap1_sa_zeros <- load_rdata("kapferer.Stochastic-Approximation.zeros")
-# kap1_sa_zero_edges <- load_rdata("kapferer.Stochastic-Approximation.zeros_and_edges")
-# kap1_sa_mple <- load_rdata("kapferer.Stochastic-Approximation.MPLE")
-# stats_kap1_sa <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
-# # equilibrium expectation
-# kap1_ee_zeros <- load_rdata("kapferer.EE.zeros")
-# kap1_ee_zero_edges <- load_rdata("kapferer.EE.zeros_and_edges")
-# kap1_ee_mple <- load_rdata("kapferer.EE.MPLE")
-# kap1_ecoli_ee <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
-# # MCMLE
+# stochastic approximation
+kap1_sa_zeros <- load_rdata("kapferer.Stochastic-Approximation.zeros")
+kap1_sa_zero_edges <- load_rdata("kapferer.Stochastic-Approximation.zeros_and_edges")
+kap1_sa_mple <- load_rdata("kapferer.Stochastic-Approximation.MPLE")
+stats_kap1_sa <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
+# equilibrium expectation
+kap1_ee_zeros <- load_rdata("kapferer.EE.zeros")
+kap1_ee_zero_edges <- load_rdata("kapferer.EE.zeros_and_edges")
+kap1_ee_mple <- load_rdata("kapferer.EE.MPLE")
+stats_kap1_ee <- load_stats_rdata("kapferer.EE.zeros", "kapferer.EE.zeros_and_edges", "kapferer.EE.MPLE")
+# MCMLE
 # kap1_mcmle_zeros <- load_rdata("kapferer.MCMLE.zeros")
 # kap1_mcmle_zero_edges <- load_rdata("kapferer.MCMLE.zeros_and_edges")
 # kap1_mcmle_mple <- load_rdata("kapferer.MCMLE.MPLE")
 # stats_kap1_mcmle <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
 
 ```
+
+```{r}
+# stochastic approximation
+kap2_sa_zeros <- load_rdata("kapferer2.Stochastic-Approximation.zeros")
+kap2_sa_zero_edges <- load_rdata("kapferer2.Stochastic-Approximation.zeros_and_edges")
+kap2_sa_mple <- load_rdata("kapferer2.Stochastic-Approximation.MPLE")
+stats_kap2_sa <- load_stats_rdata("kapferer2.Stochastic-Approximation.zeros", "kapferer2.Stochastic-Approximation.zeros_and_edges", "kapferer2.Stochastic-Approximation.MPLE")
+# equilibrium expectation
+kap2_ee_zeros <- load_rdata("kapferer2.EE.zeros")
+kap2_ee_zero_edges <- load_rdata("kapferer2.EE.zeros_and_edges")
+kap2_ee_mple <- load_rdata("kapferer2.EE.MPLE")
+stats_kap2_ee <- load_stats_rdata("kapferer2.EE.zeros", "kapferer2.EE.zeros_and_edges", "kapferer2.EE.MPLE")
+```
+
 
 # Analysis
 
@@ -136,12 +150,34 @@ self_params_ecoli <- data.frame()
 self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_ee)
 self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_sa)
 self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_mcmle)
-print(self_params_ecoli)
+print(self_params_ecoli, row.names = F)
 
 ```
 
+### Kap 1
+
+```{r}
+params_kap1 <- data.frame()
+params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_ee)
+params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_sa)
+# params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_mcmle)
+print(params_kap1)
+```
+
+
+### Kap 2
+```{r}
+params_kap2 <- data.frame()
+params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_ee)
+params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_sa)
+# params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_mcmle)
+print(params_kap2)
+```
+
+
 ## Runtimes
 
+### E. Coli 1
 ```{r runtimes-ecoli}
 
 df_ecoli <- data.frame()
@@ -152,6 +188,8 @@ print(df_ecoli)
 
 ```
 
+### E. Coli 2
+
 ```{r runtimes-ecoli-self}
 
 df_self_ecoli <- data.frame()
@@ -160,6 +198,27 @@ df_self_ecoli <- tabulate_runtimes(df_self_ecoli, self_stats_ecoli_sa)
 df_self_ecoli <- tabulate_runtimes(df_self_ecoli, self_stats_ecoli_mcmle)
 print(df_self_ecoli)
 
+```
+
+### Kap 1
+
+```{r}
+df_kap1 <- data.frame()
+df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_ee)
+df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_sa)
+# df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_mcmle)
+print(df_kap1)
+```
+
+
+### Kap 2
+
+```{r}
+df_kap2 <- data.frame()
+df_kap2 <- tabulate_runtimes(df_kap2, stats_kap2_ee)
+df_kap2 <- tabulate_runtimes(df_kap2, stats_kap2_sa)
+# df_ecoli <- tabulate_runtimes(df_ecoli, stats_kap2_mcmle)
+print(df_kap2)
 ```
 
 ## Traceplots

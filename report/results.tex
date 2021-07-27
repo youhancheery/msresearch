@@ -3,7 +3,7 @@
 
 We first look at the runtime differences of the different approaches based on different starting points, under the datasets briefly mentioned in Section \ref{sec:method} and detailed in Appendices \ref{ecoli} and \ref{kapferer}. Each subsection to follow will also contain the parameter estimates and a measure of the difference between the method and starting point combinations.
 
-\subsection{E. Coli (no self-loop)}
+\subsection{Model Set 1: E. Coli With No Mixing}
 
 \paragraph{Equilibrium Expectation (EE)}
 
@@ -26,6 +26,7 @@ We first look at the runtime differences of the different approaches based on di
 
 \begin{table}[H]
 \centering
+\scriptsize
 \begin{tabular}{|| c | c | c | c | c | c | c ||}
 \hline
 Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
@@ -62,6 +63,7 @@ MPLE & 15.534803 & 32.362031 & 32.199131 & 20.771601 & 12.224798 & -196.0182076 
 
 \begin{table}[H]
 \centering
+\scriptsize
 \begin{tabular}{|| c | c | c | c | c | c | c ||}
 \hline
 Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
@@ -98,6 +100,7 @@ MPLE & 15.534803 & 32.362031 & 32.199131 & 20.771601 & 12.224798 & -196.0182076 
 
 \begin{table}[H]
 \centering
+\scriptsize
 \begin{tabular}{|| c | c | c | c | c | c | c ||}
 \hline
 Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
@@ -113,21 +116,21 @@ MPLE & -4.981500 & -1.397047 & -2.246059 & -2.009961 & -1.587440 & 0.8127727 \\
 \caption{E. Coli parameter estimates with various starting points using MCMLE as the estimation method}
 \end{table}
 
-\subsection{E. Coli (self-loop)}
+\subsection{Model Set 2: E. Coli With Self Mixing}
 
 \paragraph{Equilibrium Expectation (EE)}
 
 \begin{table}[H]
 \centering
- \begin{tabular}{||c | c | c | c | c||} 
+ \begin{tabular}{|| c | c | c | c||} 
  \hline
- Method & Starting Point & User & System & Elapsed \\
+ Starting Point & User & System & Elapsed \\
  \hline\hline
- EE & zeros & 22.007	 & 0.034 & 22.041 \\ 
+ Zeros & 22.007	 & 0.034 & 22.041 \\ 
  \hline
- EE & zeros and edges & 8.160 & 0.002 & 8.155 \\
+ Zeros and edges & 8.160 & 0.002 & 8.155 \\
  \hline
- EE & MPLE & 19.046 & 0.043 & 19.098 \\
+ MPLE & 19.046 & 0.043 & 19.098 \\
  \hline
  \end{tabular}
  \label{t:ecoli2_ee}
@@ -158,13 +161,15 @@ MPLE & 2.224877	& 14.058709 & 13.586779 & 8.812083 & 5.728130 & -82.8397531 & -1
 
 \begin{table}[H]
 \centering
-\begin{tabular}{||c | c | c | c | c||}
+\begin{tabular}{|| c | c | c | c||}
  \hline
- SA & zeros & 22.128 & 0.113 & 22.460 \\
+ Starting Point & User & System & Elapsed \\
  \hline
- SA & zeros and edges & 932.005 & 0.493 & 1215.180 \\ 
+ Zeros & 22.128 & 0.113 & 22.460 \\
  \hline
- SA & MPLE & 18.799 & 0.094 & 18.933 \\ 
+ Zeros and edges & 932.005 & 0.493 & 1215.180 \\ 
+ \hline
+ MPLE & 18.799 & 0.094 & 18.933 \\ 
  \hline
  \end{tabular}
  \label{t:ecoli2_sa}
@@ -194,13 +199,15 @@ MPLE & 3.190518	& 12.771154 & 9.827869 & 8.806080 & 1.497652 & -77.5304319 & -1.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{||c | c | c | c | c||}
+\begin{tabular}{|| c | c | c | c||}
  \hline
- MCMLE & zeros & 361.232 & 2.940 & 366.182 \\  
+ Starting Point & User & System & Elapsed \\ 
  \hline
- MCMLE & zeros and edges & 32.287 & 1.438 & 33.682 \\ 
+ Zeros & 361.232 & 2.940 & 366.182 \\  
  \hline
- MCMLE & MPLE & 22.193 & 0.835 & 22.816 \\  
+ Zeros and edges & 32.287 & 1.438 & 33.682 \\ 
+ \hline
+ MPLE & 22.193 & 0.835 & 22.816 \\  
  \hline
 \end{tabular}
 \label{t:ecoli2}
@@ -226,9 +233,9 @@ MPLE & -5.849533	 & -1.356081 & -2.012842 & -1.755260 & -2.330215 & 2.3329175 & 
 \end{table}
 
 
-\subsection{Kapferer (no gwdsp)}
+\subsection{Model Set 3: Kapferer With No GWDSP Parameter}
 
 
-\subsection{Kapferer (self-loop)}
+\subsection{Model Set 4: Kapferer With GWDSP Parameter}
 
 

@@ -11,7 +11,15 @@
 \usepackage{titlesec}
 \usepackage{graphics}
 \usepackage{float}
-
+\usepackage{lmodern}  % for bold teletype font
+\usepackage{xcolor}   % for \textcolor
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{black}{$\hookrightarrow$}\space},
+}
 %\onehalfspacing
 
 \titleformat{\paragraph}
@@ -41,20 +49,20 @@
 \input{abstract.tex}
 \pagebreak
 \input{introduction.tex}
-
-\input{litreview.tex}
-
-\input{method.tex}
-
-\input{results.tex}
-
-\input{future_work.tex}
-
-\input{notes.tex}
 \pagebreak
+\input{litreview.tex}
+\pagebreak
+\input{method.tex}
+\pagebreak
+\input{results.tex}
+\pagebreak
+\input{future_work.tex}
+\pagebreak
+%\input{notes.tex}
+%\pagebreak
 \input{appendix.tex}
-
-\bibliographystyle{plainnat}
+\pagebreak
+\bibliographystyle{apa}
 \bibliography{references}
 
 \end{document}
