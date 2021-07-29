@@ -10,7 +10,7 @@ output: html_notebook
 library(stringr)
 library(dplyr)
 library(ergm)
-
+library(xtable)
 BASE_PATH <- "~/math5005/msresearch/outputs/outputs/"
 ```
 
@@ -171,7 +171,9 @@ params_kap2 <- data.frame()
 params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_ee)
 params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_sa)
 # params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_mcmle)
+print.xtable(xtable(params_kap2), file = "~/math5005/msresearch/outputs/tables/kap2_params.txt")
 print(params_kap2)
+
 ```
 
 
