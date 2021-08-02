@@ -1,0 +1,428 @@
+\section{Results}
+\label{sec:results}
+
+We first look at the runtime differences of the different approaches based on different starting points, under the datasets briefly mentioned in Section \ref{sec:method} and detailed in Appendices \ref{ecoli} and \ref{kapferer}. Each subsection to follow will also contain the parameter estimates and a measure of the difference between the method and starting point combinations.
+
+\subsection{Model Set 1: E. Coli With No Mixing}
+
+
+\paragraph{Equilibrium Expectation (EE)}
+
+\begin{table}[H]
+ \centering
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Starting Point & User & System & Elapsed \\
+ \hline\hline
+ zeros & 21.052 & 0.025 & 21.099 \\ 
+ \hline
+ zeros and edges & 6.763 & 0.004 & 6.777 \\
+ \hline
+ MPLE & 17.863 & 0.027 & 17.897 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli1_ee}
+ \caption{E. Coli dataset run-times with various starting point configurations using EE as the estimation method}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{|| c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
+\hline
+Zeros & -5.737519 & -3.323081 & -4.305612 & -3.518558 & -2.636180 & 2.9922375 \\
+\hline
+Zeros and edges & -4.539951 &-2.110865 & -3.098017 & -3.209092 & -3.681314 & 1.7391186 \\
+\hline
+MPLE & 15.534803 & 32.362031 & 32.199131 & 20.771601 & 12.224798 & -196.0182076 \\
+\hline
+\end{tabular}
+\label{t:params_ecoli_ee}
+\caption{E. Coli parameter estimates with various starting points using EE as the estimation method}
+\end{table}
+
+\paragraph{Stochastic Approximation (SA)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c | c | c | c | c||}
+ \hline
+ Starting Point & User & System & Elapsed \\ 
+ \hline
+ zeros & 21.134 & 0.087 & 21.795 \\
+ \hline
+ zeros and edges & 896.263 & 0.264 & 897.086 \\ 
+ \hline
+ MPLE & 17.572 & 0.027 & 17.610 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli1_sa}
+ \caption{E. Coli dataset run-times with various starting point configurations using SA as the estimation method}
+ \end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{|| c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
+\hline
+Zeros & -5.737519 & -3.323081 & -4.305612 & -3.518558 & -2.636180 & 2.9922375 \\
+\hline
+Zeros and edges & -4.539951 &-2.110865 & -3.098017 & -3.209092 & -3.681314 & 1.7391186 \\
+\hline
+MPLE & 15.534803 & 32.362031 & 32.199131 & 20.771601 & 12.224798 & -196.0182076 \\
+\hline
+\end{tabular}
+\label{t:params_ecoli_sa}
+\caption{E. Coli parameter estimates with various starting points using SA as the estimation method}
+\end{table}
+
+\paragraph{Markov Chain Maximum Likelihood Estimator (MCMLE)}
+
+\begin{table}[H]
+\centering
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Starting Point & User & System & Elapsed \\ 
+ \hline
+ zeros & 301.087 & 3.712 & 373.466 \\
+ \hline
+ zeros and edges & 46.978 & 3.267 & 373.466 \\ 
+ \hline
+ MPLE & 43.854 & 3.185 & 125.712 \\ 
+ \hline
+\end{tabular}
+\label{t:ecoli1_mcmle}
+\caption{E. Coli dataset run-times with various starting point configurations using MCMLE as the estimation method}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{|| c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg.fixed.0.25 \\
+\hline
+Zeros & -1.680262 & 497.776421 & 189.629113 & 130.370015 & 35.555459 & -446.7001373 \\
+\hline
+Zeros and edges & -5.111108 & -1.402672 & -2.505505 & -2.271429 & -3.267121 & 1.5884273 \\
+\hline
+MPLE & -4.981500 & -1.397047 & -2.246059 & -2.009961 & -1.587440 & 0.8127727 \\
+\hline
+\end{tabular}
+\label{t:params_ecoli_mcmle}
+\caption{E. Coli parameter estimates with various starting points using MCMLE as the estimation method}
+\end{table}
+
+\subsection{Model Set 2: E. Coli With Self Mixing}
+
+\paragraph{Equilibrium Expectation (EE)}
+
+\begin{table}[H]
+\centering
+ \begin{tabular}{|| c | c | c | c||} 
+ \hline
+ Starting Point & User & System & Elapsed \\
+ \hline\hline
+ Zeros & 22.007	 & 0.034 & 22.041 \\ 
+ \hline
+ Zeros and edges & 8.160 & 0.002 & 8.155 \\
+ \hline
+ MPLE & 19.046 & 0.043 & 19.098 \\
+ \hline
+ \end{tabular}
+ \label{t:ecoli2_ee}
+ \caption{E. Coli dataset with self-loop run times with various starting point configurations and EE as the estimation method}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{|| c | c | c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg0.25 & Mix False & Mix True \\
+\hline
+Zeros & -10.716486 & -6.594619 & -6.689404 & -7.215315 & -4.544823 & 10.6444020 & 11.29079006 & 35.7647417 \\
+\hline
+Zeros and edges & -5.852937 & -1.927183 &-2.109867 & -2.128186 & -2.384952 & 2.4482905 & 1.83567510 & 1.8338598 \\
+\hline
+MPLE & 2.224877	& 14.058709 & 13.586779 & 8.812083 & 5.728130 & -82.8397531 & -1.85029310 & -4.1102634 \\
+\hline
+\end{tabular}
+\label{t2:params_ecoli_ee}
+\caption{E. Coli parameter estimates with various starting points using EE as the estimation method}
+\end{table}
+
+
+\paragraph{Stochastic Approximation (SA)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|| c | c | c | c||}
+ \hline
+ Starting Point & User & System & Elapsed \\
+ \hline
+ Zeros & 22.128 & 0.113 & 22.460 \\
+ \hline
+ Zeros and edges & 932.005 & 0.493 & 1215.180 \\ 
+ \hline
+ MPLE & 18.799 & 0.094 & 18.933 \\ 
+ \hline
+ \end{tabular}
+ \label{t:ecoli2_sa}
+ \caption{E. Coli dataset with self-loop run times with various starting point configurations and SA as the estimation method}
+\end{table}
+
+
+\begin{table}[H]
+\scriptsize
+\centering
+\begin{tabular}{|| c | c | c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg0.25 & Mix False & Mix True \\
+\hline
+Zeros & -6.243631 & -5.642640 & -5.536328 & -4.552708 & -1.396533 & 0.6543856 & 10.07940661 & 1.4683291 \\
+\hline
+Zeros and edges & -5.816048 & -1.309330 & -2.025997 & -1.777584 & -2.264008 & 2.0434754 & 1.55321296 & 1.1751994 \\
+\hline
+MPLE & 3.190518	& 12.771154 & 9.827869 & 8.806080 & 1.497652 & -77.5304319 & -1.15712833 &-7.7680711 \\
+\hline
+\end{tabular}
+\label{t2:params_ecoli_sa}
+\caption{E. Coli parameter estimates with various starting points using SA as the estimation method}
+\end{table}
+
+\paragraph{Markov Chain Maximum Likelihood Estimator (MCMLE)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|| c | c | c | c||}
+ \hline
+ Starting Point & User & System & Elapsed \\ 
+ \hline
+ Zeros & 361.232 & 2.940 & 366.182 \\  
+ \hline
+ Zeros and edges & 32.287 & 1.438 & 33.682 \\ 
+ \hline
+ MPLE & 22.193 & 0.835 & 22.816 \\  
+ \hline
+\end{tabular}
+\label{t:ecoli2}
+\caption{E. Coli dataset with self-loop run times with various starting point configurations and MCMLE as the estimation method}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{|| c | c | c | c | c | c | c | c | c ||}
+\hline
+Starting point & Edges & Degree2 & Degree3 & Degree4 & Degree5 & Gwdeg0.25 & Mix False & Mix True \\
+\hline
+Zeros & -1.643217 & 591.371338 & 225.284319 & 154.882969 & 42.240810 & -530.6913835 & 0.07455501 & -0.2704657 \\
+\hline
+Zeros and edges & -5.825112 & -1.361900 & -2.035242 & -1.781577 & -2.323788 & 2.3079946 & 1.53632447 & 1.1967021 \\
+\hline
+MPLE & -5.849533	 & -1.356081 & -2.012842 & -1.755260 & -2.330215 & 2.3329175 & 1.56200515 & 1.2046862 \\
+\hline
+\end{tabular}
+\label{t2:params_ecoli_mcmle}
+\caption{E. Coli parameter estimates with various starting points using MCMLE as the estimation method}
+\end{table}
+
+
+\subsection{Model Set 3: Kapferer With No GWDSP Parameter}
+
+\paragraph{Equilibrium Expectation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c||}
+\hline
+Starting Point & User & System & Elapsed \\
+\hline
+Zeros & 147.615	& 0.075	& 147.761 \\
+\hline
+Zeros and edges & 38.984 & 0.009 & 39.002 \\
+\hline
+MPLE & 134.161 & 0.064 & 134.255 \\
+\hline
+\end{tabular}
+\label{t:runtimes_kap1_ee}
+\caption{Runtime for Equilibrium Expectation on Kapferer dataset using model 3 across the three tested starting points}
+\end{table}
+
+% parameters
+
+\paragraph{Stochastic Approximation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c||}
+\hline
+Starting Point & User & System & Elapsed \\
+\hline
+Zeros & 23.540 & 0.010 & 23.585 \\
+\hline
+Zeros and edges & 1114.139 & 0.259 & 1114.803 \\
+\hline
+MPLE & 21.153 & 0.009 & 21.193 \\
+\hline
+\end{tabular}
+\label{t:runtimes_kap1_sa}
+\caption{Runtime for Stochastic Approximation on Kapferer dataset using model 3 across the three tested starting points}
+\end{table}
+
+% parameters
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c||}
+  \hline
+  Starting Point & Edges & gwesp.fixed.0.25 & gwdsp.fixed.0.25 \\ 
+  \hline
+  Zeros & -1.82 & 0.74 & -0.19 \\ 
+  \hline
+  Zeros and edges & -1.06 & 0.74 & -0.37 \\
+  \hline
+  MPLE & -2.88 & 1.38 & -0.14 \\
+  \hline
+\end{tabular}
+\label{t:params_kap1_ee}
+\caption{Parameters of Kapferer dataset under model 3 with Equilibrium Expectation}
+\end{table}
+
+
+\subsection{Model Set 4: Kapferer With GWDSP Parameter}
+
+\paragraph{Equilibrium Expectation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c||}
+\hline
+Starting Point & User & System & Elapsed \\
+\hline
+Zeros & 61.388 & 0.026 & 61.437 \\
+\hline
+Zeros and edges & 19.057 & 0.004 & 19.069 \\
+\hline
+MPLE & 56.211 & 0.030 & 56.253 \\
+\hline 
+\end{tabular}
+\label{t:runtimes_kap2_ee}
+\caption{Runtimes of model set 3 on Kapferer data, with EE as the estimation method across different starting points}
+\end{table}
+
+% params
+
+\begin{table}[]
+\centering
+\begin{tabular}{||c|c|c|c|c||}
+  \hline
+ Starting Point & edges & gwdeg.fixed.0.25 & gwesp.fixed.0.25 & gwdsp.fixed.0.25 \\ 
+  \hline
+  Zeros & -4.29 & -9.74 & 3.41 & -1.75 \\
+  \hline 
+  Zeros and edges & -1.05 & -45.09 & 0.60 & -0.28 \\ 
+  \hline
+  MPLE & -2.95 & -0.17 & 1.39 & -0.12 \\ 
+  \hline
+\end{tabular}
+\label{t:params_kap2_ee}
+\caption{Parameters of model set 3 on Kapferer data, with EE as the estimation method across various starting configurations}
+\end{table}
+
+\paragraph{Stochastic Approximation}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c||}
+\hline
+Starting Point & User & System & Elapsed \\
+\hline
+Zeros & 61.248 & 0.036 & 61.586 \\
+\hline
+Zeros and edges & 2945.969 & 1.102 & 2950.486 \\
+\hline 
+MPLE & 56.096 & 0.042 & 56.158 \\
+\hline 
+\end{tabular}
+\label{t:runtimes_kap2_sa}
+\caption{Runtimes of model set 4 on Kapferer data, with EE as the estimation method of choice across the three different starting points}
+\end{table}
+
+% params
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c|c|c||}
+  \hline
+  Starting Point & edges & gwdeg.fixed.0.25 & gwesp.fixed.0.25 & gwdsp.fixed.0.25 \\ 
+  \hline
+  Zeros & -6.99 & -24.31 & 2.26 & 0.43 \\ 
+  \hline
+  Zeros and edges & -2.42 & 0.09 & 1.06 & -0.15 \\ 
+  \hline
+  MPLE & -2.94 & 0.12 & 1.38 & -0.12 \\ 
+  \hline
+\end{tabular}
+\label{t:params_kap2_sa}
+\caption{Parameters of model set 4 on Kapferer data, with SA as the estimation method across various starting configurations}
+\end{table}
+
+\subsection{Discussion}
+
+First, we will consider the parameter estimates across the models in reference to the standard set by \cite{hummels2012} re-keyed in the table \ref{t:hummel_ecoli} below. We note that the parameter values in Hummel's paper were calculated through the stepping algorithm with the default ERGM starting point, the MPLE. Thus, the most comparative analysis can be made when considering the implementations above with respect to an MPLE starting point, though it is still worth exploring the variances in parameter estimates and differences in runtimes across all three models.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c||}
+\hline
+Parameter & Model 1 & Model 1 plus self-edges \\
+\hline
+Edges & -5.07 (0.027, 0.012) & -5.83 (0.067, 0.013) \\
+\hline 
+Degree-2 & -1.47 (0.126, 0.025) & -1.36 (0.141, 0.014) \\
+\hline
+Degree-3 & -2.36 (0.192, 0.027) & -2.03 (0.206, 0.010) \\ 
+\hline
+Degree-4 & -2.03 (0.206, 0.020) & -1.79 (0.239, 0.009) \\
+\hline
+Degree-5 & -2.91 (0.415, 0.183) & -2.32 (0.409, 0.035) \\
+\hline
+GWDEG(0.25) & 1.86 (0.174, 0.094) & 2.32 (0.336, 0.050) \\
+\hline
+Node + Self & N/A & 1.55 (0.037, 0.0002) \\
+\hline
+Self + Node & N/A & 1.21 (0.118, 0.002) \\
+\hline
+\end{tabular}
+\label{t:hummel_ecoli}
+\caption{Hummel parameter estimates for the E. Coli models (defined ``model set 1'' and ``model set 2'' above) obtained using Stepping (\cite{hummels2012})}
+\end{table} 
+
+We see that the equilibrium expectation algorithm in ``Model set 1'' (so a comparison with ``model 1'' in table \ref{t:hummel_ecoli}) produces noticeably different results to the parameters shown here. Similarly, equating equilibrium expectation with ``model 1 plus self-edges'' 
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c|c|c||}
+\hline
+Parameter & Model 1 & Model 2 \\
+\hline
+Edges & -3.016163 & -3.17598 \\
+\hline
+GWESP(0.25) & 1.444937 & 1.53531 \\
+\hline
+GWDSP(0.25) & 0.322320 & -0.11757 \\
+\hline
+GWDegree(0.25) & NA & 0.43127 \\
+\hline
+\end{tabular}
+\label{t:hummel_kapferer}
+\caption{Parameter estimation of the Kapferer dataset with equivalent models in \cite{hummels2012}}
+\end{table}
+

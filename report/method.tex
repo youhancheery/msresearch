@@ -1,0 +1,47 @@
+\section{Method}
+\label{sec:method}
+%After implementing the Equilibrium Expectation algorithm and ensuring that is producing reliable estimates we will then implement the following testing strategy:
+
+Before considering analysis methodology, for an equivalent comparison of Equilibrium Expectation to other estimation methods, we must first implement Stivala's algorithm within the Statnet \texttt{ergm} package by \cite{ergm}. 
+
+% is there any value in talking about implementation here?
+
+The methods we will be benchmarking against are mentioned in Section \ref{introduction} and detailed in Section \ref{literature_review}. Specifically, we use the models used by \cite{hummels2012} to compare the effectiveness of Equilibrium Expectation against MCMLE and Stochastic-Approximation as implemented in \texttt{ergm} under different combinations of starting points, while controlling for other hyperparameters such as burn-in. The datasets we use to compare estimation algorithms are the E. Coli dataset for protein location sites, as well as Kapferer's Zambian tailor shop. For more detail on the datasets refer to Appendix \ref{ecoli} and \ref{kapferer} respectively.
+
+For the E. Coli network dataset we consider four models as implemented by Hummels, as well as \cite{krivitsky2017}:
+
+\begin{lstlisting}[language=R, label = {code:model1}]
+ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE)
+\end{lstlisting}
+
+The first model considers a count of the edges as well as a count of actors with degrees two through 5 (individually), and the geometrically weighted degree with a fixed decay of 0.25.
+
+\begin{lstlisting}[language=R, label = {code:model2}]
+ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1)
+\end{lstlisting}
+
+Model \ref{code:model2} is a superset of model \ref{code:model1} but with an additional term for nodal attribute mixing with the edge.
+
+\begin{lstlisting}[language=R, label = {code:model3}]
+kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE)
+\end{lstlisting}
+
+Model \ref{code:model3} has parameters: count of edges, \texttt{gwesp} (geometrically weighted edgewise shared partnerships) which models triadic closure with a decay of 0.25, and \texttt{gwdsp} is a count of shared partnerships regardless of whether actors \textit{i} and \textit{j} have a tie with a decay parameter fixed at 0.25.
+
+\begin{lstlisting}[language=R, label = {code:model4}]
+kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE)
+\end{lstlisting}
+
+Finally, model \ref{code:model4} contains all of model 3 with an additional parameter to count the geometrically weighted degrees (\texttt{gwdegree}) decayed at a rate of 0.25.
+
+The terms \texttt{gwdegree}, \texttt{gwesp}, and \texttt{gwdsp} are from \cite{hunter2007} and explained in more detail in Appendix \ref{model_terms}
+
+For each of the network, we then considered three different starting point configurations across each of the three aforementioned estimation methods:
+\begin{enumerate}
+\item Starting from a parameter vector of all zeros, i.e. $\boldsymbol{\theta_0} = \boldsymbol{0}$.
+\item Starting from the maximum pseudo-likelihood estimate, $\boldsymbol{\theta_0} = \boldsymbol{\theta_{MPLE}}$
+\item Starting from a parameter vector of mostly zeros, except for the edges of the network which were calculated beforehand with a run of the network at the edges only, $\boldsymbol{\theta_0} = \boldsymbol{\theta_{edges}}$. The R package \texttt{ergm} was used to calculate the edges using a quick run of MCMLE.
+\end{enumerate}
+
+Due to the nature of each estimation algorithm, the hypothesis is that differences in starting points not only may lead to different points of convergence, but the time taken to convergence may also be different. While Stochastic Approximation and Equilibrium Expectation are similar algorithmically, the steps taken to reach the MLE are noticeably different. Stochastic Approximation takes larger steps, while EE squares the change in calculated statistics leading to shorter, more precise steps. We expect that MCMLE will have a somewhat more challenging time with the starting points at zero and mostly zero sans the edges of the observed network, but should be able to converge.
+

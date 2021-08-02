@@ -1,5 +1,4 @@
-	
-\section{Notes from papers}
+\section{Notes from papers [to be removed later]}
 
 \subsection{Using contrastive divergence to seed Monte Carlo MLE for exponential-family
 random graph models (Krivitsky, 2015)}
@@ -22,16 +21,7 @@ random graph models (Krivitsky, 2015)}
         \item SA methods are inefficient as each new $\theta^{t}$ requires a burn-in and a sample to estimate $U(\theta^{t})$ - \textbf{what does this mean? why do we need a new MCMC for each $\theta^{t}$?} Note here that $U$ is the score function used to find the MLE.
         \item SA will fail if the entirety of the sample lies on the edge of the convex hull.
     \end{itemize}
-    \item \textbf{Monte Carlo MLE methods}
-\begin{itemize}
-    \item Uses importance sampling integration to find $\frac{\kappa(\theta')}{\kappa(\theta)}$
-    \item Given a sample from the ERGM at point $\theta^{t}$ we then update $\theta^{t+1}$
-    \item There are a number of benefits in using the MCMLE approach - namely that it uses the entire distribution of $y^{\theta^{t}}$ instead of just the first moment, incorporates nonlinear effects on $\theta$ to determine the next guess, and automatically determines the step length = less steps to convergence.
-    \item That said, it is even more susceptible to a bad $\theta^{0}$ guess.
-    \item Can also fail for non-curved ERGMs when the convex hull of the simulated statistic does not contain $g(y^{obs})$ (i think this just means the observed graph itself?)
-    \item Hummel et. al (2012) proposed two ways to address the bad first guess problem. Firstly, assuming $g(Y)$ is log-normal, then $exp[{\eta(\theta') - n(\theta)}^{T}g(Y)]$ is lognormal and we can approximate the expectation such that the maximiser depends only on the first two moments of $y^{\theta^{t}}$ which has a closed form solution for non-curved ERGMs. The second fix is a partial stepping technique that shifts the observed statistic to the centroid of the simulated statistic, reducing the step but preserving its direction. This approach \emph{survives} poor starting values but does not make make immune to them.
-\end{itemize}
-    \item There are two approaches to finding good values for $y^{\theta^{0}}$. One is the maximum pseudo/composite likelihood estimation (MPLE/MCLE) and the second is contrastive divergence. 
+
     \item \textbf{Composite likelihood methods}
     \begin{itemize}
         \item Before simulation methods became popularised we had pseudolikelihood estimators (Strauss + Ikeda, 1974). Here the likelihood was approximated and $y_{i,j}$ is an indicator for the presence of ties. This lead to a score fuction that is a nonlinear logistic regression.
@@ -88,6 +78,20 @@ How well do different algorithms behave if say you start with a vector of 0s for
     \end{itemize}
 \end{itemize}
 
+\begin{itemize}
+    \item \textbf{Monte Carlo MLE methods}
+\begin{itemize}
+    \item Uses importance sampling integration to find $\frac{\kappa(\theta')}{\kappa(\theta)}$
+    \item Given a sample from the ERGM at point $\theta^{t}$ we then update $\theta^{t+1}$
+    \item There are a number of benefits in using the MCMLE approach - namely that it uses the entire distribution of $y^{\theta^{t}}$ instead of just the first moment, incorporates nonlinear effects on $\theta$ to determine the next guess, and automatically determines the step length = less steps to convergence.
+    \item That said, it is even more susceptible to a bad $\theta^{0}$ guess.
+    \item Can also fail for non-curved ERGMs when the convex hull of the simulated statistic does not contain $g(y^{obs})$ (i think this just means the observed graph itself?)
+    \item Hummel et. al (2012) proposed two ways to address the bad first guess problem. Firstly, assuming $g(Y)$ is log-normal, then $exp[{\eta(\theta') - n(\theta)}^{T}g(Y)]$ is lognormal and we can approximate the expectation such that the maximiser depends only on the first two moments of $y^{\theta^{t}}$ which has a closed form solution for non-curved ERGMs. The second fix is a partial stepping technique that shifts the observed statistic to the centroid of the simulated statistic, reducing the step but preserving its direction. This approach \emph{survives} poor starting values but does not make make immune to them.
+\end{itemize}
+    \item There are two approaches to finding good values for $y^{\theta^{0}}$. One is the maximum pseudo/composite likelihood estimation (MPLE/MCLE) and the second is contrastive divergence. 
+\end{itemize}
+
+
 \subsection{Markov Chain Monte Carlo Estimation of Exponential Random Graph Models}
 
 \begin{itemize}
@@ -112,10 +116,9 @@ How well do different algorithms behave if say you start with a vector of 0s for
         \item There is a lot of mention of the triad model in these older papers. With simulation based methods, how often are they impervious to model specification?
         \item Is simulating an ERGM a different problem to estimating an ERGM?
     \end{itemize}
-    
 \end{itemize}
 
-\section{Meeting 24/03}
+\subsection{Meeting 24/03}
 
 \begin{itemize}
 \item \textbf{Meeting preparation}
@@ -144,10 +147,4 @@ How well do different algorithms behave if say you start with a vector of 0s for
         \item Check out MCMC.c.template.do\_not\_include\_directly.h
         \item Testing a hybrid method - starting with Robbins Monro and then going into MCMCMLE
     \end{itemize}
-\end{itemize}
-
-\subsection{some other papers}
-
-\begin{itemize}
-\item IFD Sampler http://estimnet.org/IFDsampler_preprint.pdf
 \end{itemize}

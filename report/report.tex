@@ -1,28 +1,69 @@
-\documentclass[10pt]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[parfill]{parskip}
-\usepackage[numbers, square]{natbib}
+\usepackage[round]{natbib}
 \usepackage[legalpaper, portrait, margin=1in]{geometry}
 \usepackage{amsmath}
+\usepackage{setspace}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{titlesec}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage{lmodern}  % for bold teletype font
+\usepackage{xcolor}   % for \textcolor
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{black}{$\hookrightarrow$}\space},
+}
+\usepackage{hyperref}
+%\onehalfspacing
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \title{Benchmarking Equilibrium Expectation as an Estimation Method for Exponential Random Graph Models}
-\author{Youhan Cheery}
-\date{\today}
+\author{Youhan Cheery\\ Pavel Krivitsky, Supervisor\\ School of Mathematics and Statistics, UNSW Sydney}
+\date{August 2021 \\ Submitted in partial fulfilment of the requirements of the degree of Masters of Statistics}
 
 \begin{document}
 \maketitle
+\begin{figure}
+\centering
+\includegraphics{portraitcolourpos.eps}
+\end{figure}
+
+
+\pagebreak
+\tableofcontents
+\pagebreak
+\listoftables
+\listoffigures
+\pagebreak
 
 \input{abstract.tex}
-
+\pagebreak
 \input{introduction.tex}
-
+\pagebreak
 \input{litreview.tex}
-
+\pagebreak
 \input{method.tex}
-
-\input{notes.tex}
-
-\bibliographystyle{apalike}
+\pagebreak
+\input{results.tex}
+\pagebreak
+\input{future_work.tex}
+\pagebreak
+%\input{notes.tex}
+%\pagebreak
+\input{appendix.tex}
+\pagebreak
+\bibliographystyle{apa}
 \bibliography{references}
 
 \end{document}
