@@ -317,32 +317,32 @@ MCMLE.MAXIT   <- 60
 
 ###### ECOLI BASE 
 ###### STOCHASTIC-APPROXIMATION
-#run_stoch_approx("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
-#run_stoch_approx("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
-#run_stoch_approx("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-#run_mcmle("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
 #run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT) 
-#run_mcmle("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
-#run_ee("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
-#run_ee("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
-#run_ee("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
 
 ###### ECOLI WITH SELF LOOP
 ###### STOCHASTIC-APPROXIMATION
-#run_stoch_approx("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
-#run_stoch_approx("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
-#run_stoch_approx("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-#run_mcmle("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
-#run_ee("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
-#run_ee("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
-#run_ee("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+run_ee("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
 
 ###### KAPFERER BASE
 ###### STOCHASTIC-APPROXIMATION
@@ -351,9 +351,9 @@ run_stoch_approx("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, f
 run_stoch_approx("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, SA.nsubphases = SA.NSUBPHASES)
 run_stoch_approx("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-#run_mcmle("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
 run_ee("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, EE.nsubphases = EE.NSUBPHASES)
 run_ee("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, EE.nsubphases = EE.NSUBPHASES)
@@ -365,9 +365,9 @@ run_stoch_approx("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.2
 run_stoch_approx("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
 run_stoch_approx("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-#run_mcmle("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
-#run_mcmle("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+run_mcmle("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
 run_ee("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
 run_ee("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
