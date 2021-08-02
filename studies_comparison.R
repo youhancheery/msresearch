@@ -7,6 +7,7 @@ library(parallel)
 
 ESTIMATION_METHODS <- c("Stochastic-Approximation", "Robbins-Monro", "EE", "MCMLE")
 STARTING_ESTIMATES <- c("zeros", "MPLE", "zeros_and_edges")
+N_CORES <- 16
 set.seed(1234)
 
 # load all the different datasets
@@ -55,11 +56,14 @@ load("~/math5005/msresearch/data/supp_datasets.RData")
   init <- ergm_output$coef.init
   final[paste0(name, ":",
                main_method,":",
-               init_method)] <- list(list("init"=init, "network"=ergm_output,
+               init_method)] <- list(list("init"=init,
                                           "timings"=runtime,
                                           "coef"=coef,
                                           "iterations"=iter,
                                           "is_fail"=is_fail))
+  print(runtime)
+  print(coef)
+  return(final)
 }
 
 # run ergm across all starting points, depending on the method specified by the user
@@ -127,13 +131,12 @@ run_stoch_approx <- function(name, starting_est, data, formula, n_term_formula,
       init = NULL, #otherwise actual theta0. must now input input.method argument
       init.method = starting_est,
       force.main = TRUE,
-      SA.niterations = 2000,
+      SA.niterations = 20,
       SA.nsubphases = SA.nsubphases,
-      SA.burnin = 10000,
+      SA.burnin = 1000,
       SA.interval = 500,
       SA.samplesize = 1024,
-      MCMC.runtime.traceplot = TRUE,
-      MCMC.interval = 20)
+      MCMC.runtime.traceplot = TRUE)
     # need to provide reference =~Bernoulli for MPLE starting point
     runtime <- system.time(ergm_output <- ergm(formula=formula, 
                                                control=control,
@@ -142,7 +145,7 @@ run_stoch_approx <- function(name, starting_est, data, formula, n_term_formula,
                                                eval.loglik = FALSE))
   }
   final <- .construct_output(name, main_method, starting_est, ergm_output, runtime)
-  save(final, file=paste("outputs/", name, main_method, starting_est, "RData", sep="."))
+  save(final, ergm_output, file=paste(paste0("outputs/", name), main_method, starting_est, "RData", sep="."))
 }
 
 run_mcmle <- function(name, starting_est, data, formula, n_term_formula,
@@ -165,10 +168,11 @@ run_mcmle <- function(name, starting_est, data, formula, n_term_formula,
       force.main = TRUE,
       MCMLE.termination = "Hotelling",
       MCMLE.density.guard = exp(7),
-      #MCMLE.maxit = MCMLE.maxit,
+      MCMLE.maxit = MCMLE.maxit,
       MCMLE.metric = "naive", # start with naive but will try "lognormal" later too
+      MCMC.samplesize=400,
       MCMC.runtime.traceplot = TRUE,
-      MCMC.interval = 20)
+      MCMC.interval = 10000)
     runtime <- system.time(ergm_output <- ergm(formula=formula, 
                                                control=control,
                                                eval.loglik = FALSE))
@@ -190,8 +194,9 @@ run_mcmle <- function(name, starting_est, data, formula, n_term_formula,
       MCMLE.termination = "Hotelling",
       MCMLE.density.guard = exp(7),
       MCMLE.maxit = MCMLE.maxit,
-      MCMLE.metric = "naive",
-      MCMC.interval = 20,
+      MCMLE.metric = "Median.Likelihood",
+      MCMC.interval = 10000,
+      MCMC.samplesize = 400,
       MCMC.runtime.traceplot = TRUE)
     runtime <- system.time(ergm_output <- ergm(formula=formula, 
                                                control=control,
@@ -207,10 +212,11 @@ run_mcmle <- function(name, starting_est, data, formula, n_term_formula,
       force.main = TRUE,
       MCMLE.termination = "Hotelling",
       MCMLE.density.guard = exp(7),
+      MCMLE.metric = "Median.Likelihood",
       MCMLE.maxit = MCMLE.maxit,
-      MCMLE.metric = "naive",
       MCMC.runtime.traceplot = TRUE,
-      MCMC.interval = 20)
+      MCMC.samplesize = 400,
+      MCMC.interval = 10000)
     # need to provide reference =~Bernoulli for MPLE starting point
     runtime <- system.time(ergm_output <- ergm(formula=formula, 
                                                control=control,
@@ -219,7 +225,7 @@ run_mcmle <- function(name, starting_est, data, formula, n_term_formula,
                                                eval.loglik = FALSE))
   }
   final <- .construct_output(name, main_method, starting_est, ergm_output, runtime)
-  save(final, file=paste("outputs/", name, main_method, starting_est, "RData", sep="."))
+  save(final, ergm_output, file=paste(paste0("outputs/", name), main_method, starting_est, "RData", sep="."))
 }
 
 run_ee <- function(name, starting_est, data, formula, n_term_formula,
@@ -231,7 +237,7 @@ run_ee <- function(name, starting_est, data, formula, n_term_formula,
   # with the only replacement being obviously SA -> EE
   if(!(main_method %in% ESTIMATION_METHODS)) {stop("Main method not accurately input - see ergm docs for valid starting point")}
   if(!(starting_est %in% STARTING_ESTIMATES)) {stop(paste("Starting point not in", STARTING_ESTIMATES))}
-  
+  print(EE.nsubphases) 
   if (starting_est == "zeros") {
     print(paste("running", main_method, "with", starting_est, "as the starting point"))
     control <- control.ergm(
@@ -239,11 +245,11 @@ run_ee <- function(name, starting_est, data, formula, n_term_formula,
       init = NULL, #otherwise actual theta0. must now input input.method argument
       init.method = starting_est,
       force.main = TRUE,
-      EE.niterations = 2000,
-      EE.nsubphases = EE.nsubphases,
-      EE.burnin = 10000,
-      EE.interval = 500,
-      EE.samplesize = 1024,
+      SA.niterations = 2000,
+      SA.nsubphases = EE.nsubphases,
+      SA.burnin = 10000,
+      SA.interval = 500,
+      SA.samplesize = 1024,
       MCMC.runtime.traceplot = TRUE,
       MCMC.interval = 20)
     # pretty sure we don't need to include reference for zeros starting point?
@@ -267,10 +273,10 @@ run_ee <- function(name, starting_est, data, formula, n_term_formula,
       init = theta0, # don't need init.method since we supply init
       force.main = TRUE,
       EE.niterations = 2000,
-      EE.nsubphases = EE.nsubphases,
-      EE.burnin = 10000,
-      EE.interval = 500,
-      EE.samplesize = 1024,
+      SA.nsubphases = EE.nsubphases,
+      SA.burnin = 10000,
+      SA.interval = 500,
+      SA.samplesize = 1024,
       MCMC.runtime.traceplot = TRUE)
     # pretty sure we don't need to include reference for zeros starting point?
     runtime <- system.time(ergm_output <- ergm(formula=formula, 
@@ -285,11 +291,11 @@ run_ee <- function(name, starting_est, data, formula, n_term_formula,
       init = NULL, #otherwise actual theta0. must now input input.method argument
       init.method = starting_est,
       force.main = TRUE,
-      EE.niterations = 2000,
-      EE.nsubphases = EE.nsubphases,
-      EE.burnin = 10000,
-      EE.interval = 500,
-      EE.samplesize = 1024,
+      SA.niterations = 2000,
+      SA.nsubphases = EE.nsubphases,
+      SA.burnin = 10000,
+      SA.interval = 500,
+      SA.samplesize = 1024,
       MCMC.runtime.traceplot = TRUE,
       MCMC.interval = 20)
     # need to provide reference =~Bernoulli for MPLE starting point
@@ -300,13 +306,14 @@ run_ee <- function(name, starting_est, data, formula, n_term_formula,
                                                eval.loglik = FALSE))
   }
   final <- .construct_output(name, main_method, starting_est, ergm_output, runtime)
+  print(final)
   # save results on local
-  save(final, file=paste("outputs/", name, main_method, starting_est, "RData", sep="."))
+  save(final, ergm_output, file=paste(paste0("outputs/", name), main_method, starting_est, "RData", sep="."))
 }
 
 SA.NSUBPHASES <- 8
 EE.NSUBPHASES <- 8
-MCMLE.MAXIT   <- 80
+MCMLE.MAXIT   <- 60
 
 ###### ECOLI BASE 
 ###### STOCHASTIC-APPROXIMATION
@@ -315,36 +322,38 @@ MCMLE.MAXIT   <- 80
 #run_stoch_approx("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
 #run_mcmle("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT) 
+#run_mcmle("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
-run_ee("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
-run_ee("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
-run_ee("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE), 6, EE.nsubphases = EE.NSUBPHASES)
 
 ###### ECOLI WITH SELF LOOP
 ###### STOCHASTIC-APPROXIMATION
-run_stoch_approx("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
-run_stoch_approx("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
-run_stoch_approx("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+#run_stoch_approx("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+#run_stoch_approx("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
+#run_stoch_approx("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-run_mcmle("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
-run_ee("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
-run_ee("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
-run_ee("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2.self.study", "zeros", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2.self.study", "MPLE", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
+#run_ee("ecoli2.self.study", "zeros_and_edges", ecoli2, ecoli2 ~ edges + degree(2:5) + gwdegree(0.25, fixed = TRUE) + nodemix("self", base = 1), 8, EE.nsubphases = EE.NSUBPHASES)
 
 ###### KAPFERER BASE
 ###### STOCHASTIC-APPROXIMATION
+#SA.NSUBPHASES = 7
 run_stoch_approx("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, SA.nsubphases = SA.NSUBPHASES)
 run_stoch_approx("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, SA.nsubphases = SA.NSUBPHASES)
 run_stoch_approx("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-run_mcmle("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
 run_ee("kapferer", "zeros", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, EE.nsubphases = EE.NSUBPHASES)
 run_ee("kapferer", "MPLE", kapferer, kapferer ~ edges + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 3, EE.nsubphases = EE.NSUBPHASES)
@@ -353,15 +362,14 @@ run_ee("kapferer", "zeros_and_edges", kapferer, kapferer ~ edges + gwesp(0.25, f
 ###### KAPFERER2
 ###### STOCHASTIC-APPROXIMATION
 run_stoch_approx("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
-run_stoch_approx("kapferer2", "MPLE", kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
+run_stoch_approx("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
 run_stoch_approx("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, SA.nsubphases = SA.NSUBPHASES)
 ###### MCMLE
-run_mcmle("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
-run_mcmle("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
+#run_mcmle("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, MCMLE.maxit = MCMLE.MAXIT)
 ###### EQUILIBRIUM EXPECTATION
 run_ee("kapferer2", "zeros", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
 run_ee("kapferer2", "MPLE", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
-run_ee("kapferer2", "zeros_and_edges", kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
-
+run_ee("kapferer2", "zeros_and_edges", kapferer, kapferer ~ edges + gwdegree(0.25, fixed = TRUE) + gwesp(0.25, fixed = TRUE) + gwdsp(0.25, fixed = TRUE), 4, EE.nsubphases = EE.NSUBPHASES)
 
