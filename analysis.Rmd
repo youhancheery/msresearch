@@ -11,7 +11,7 @@ library(stringr)
 library(dplyr)
 library(ergm)
 library(xtable)
-BASE_PATH <- "~/math5005/msresearch/outputs/outputs/"
+BASE_PATH <- "~/math5005/msresearch/outputs/subphase10/"
 ```
 
 
@@ -52,19 +52,19 @@ tabulate_parameters <- function(df, stats) {
 ```{r load-ecoli-models, include=FALSE}
 
 # stochastic approximation
-ecoli_sa_zeros <- load_rdata("ecoli2.Stochastic-Approximation.zeros")
-ecoli_sa_zero_edges <- load_rdata("ecoli2.Stochastic-Approximation.zeros_and_edges")
-ecoli_sa_mple <- load_rdata("ecoli2.Stochastic-Approximation.MPLE")
+ecoli_sa_zeros <- load_network_rdata("ecoli2.Stochastic-Approximation.zeros")
+ecoli_sa_zero_edges <- load_network_rdata("ecoli2.Stochastic-Approximation.zeros_and_edges")
+ecoli_sa_mple <- load_network_rdata("ecoli2.Stochastic-Approximation.MPLE")
 stats_ecoli_sa <- load_stats_rdata("ecoli2.Stochastic-Approximation.zeros", "ecoli2.Stochastic-Approximation.zeros_and_edges", "ecoli2.Stochastic-Approximation.MPLE")
 # equilibrium expectation
-ecoli_ee_zeros <- load_rdata("ecoli2.EE.zeros")
-ecoli_ee_zero_edges <- load_rdata("ecoli2.EE.zeros_and_edges")
-ecoli_ee_mple <- load_rdata("ecoli2.EE.MPLE")
+ecoli_ee_zeros <- load_network_rdata("ecoli2.EE.zeros")
+ecoli_ee_zero_edges <- load_network_rdata("ecoli2.EE.zeros_and_edges")
+ecoli_ee_mple <- load_network_rdata("ecoli2.EE.MPLE")
 stats_ecoli_ee <- load_stats_rdata("ecoli2.EE.zeros", "ecoli2.EE.zeros_and_edges", "ecoli2.EE.MPLE")
 # MCMLE
-ecoli_mcmle_zeros <- load_rdata("ecoli2.MCMLE.zeros")
-ecoli_mcmle_zero_edges <- load_rdata("ecoli2.MCMLE.zeros_and_edges")
-ecoli_mcmle_mple <- load_rdata("ecoli2.MCMLE.MPLE")
+ecoli_mcmle_zeros <- load_network_rdata("ecoli2.MCMLE.zeros")
+ecoli_mcmle_zero_edges <- load_network_rdata("ecoli2.MCMLE.zeros_and_edges")
+ecoli_mcmle_mple <- load_network_rdata("ecoli2.MCMLE.MPLE")
 stats_ecoli_mcmle <- load_stats_rdata("ecoli2.MCMLE.zeros", "ecoli2.MCMLE.zeros_and_edges", "ecoli2.MCMLE.MPLE")
 
 ```
@@ -72,19 +72,19 @@ stats_ecoli_mcmle <- load_stats_rdata("ecoli2.MCMLE.zeros", "ecoli2.MCMLE.zeros_
 ```{r load-ecoli-selfstudy-models, include=FALSE}
 
 # stochastic approximation
-self_ecoli_sa_zeros <- load_rdata("ecoli2.self.study.Stochastic-Approximation.zeros")
-self_ecoli_sa_zero_edges <- load_rdata("ecoli2.self.study.Stochastic-Approximation.zeros_and_edges")
-self_ecoli_sa_mple <- load_rdata("ecoli2.self.study.Stochastic-Approximation.MPLE")
+self_ecoli_sa_zeros <- load_network_rdata("ecoli2.self.study.Stochastic-Approximation.zeros")
+self_ecoli_sa_zero_edges <- load_network_rdata("ecoli2.self.study.Stochastic-Approximation.zeros_and_edges")
+self_ecoli_sa_mple <- load_network_rdata("ecoli2.self.study.Stochastic-Approximation.MPLE")
 self_stats_ecoli_sa <- load_stats_rdata("ecoli2.self.study.Stochastic-Approximation.zeros", "ecoli2.self.study.Stochastic-Approximation.zeros_and_edges", "ecoli2.self.study.Stochastic-Approximation.MPLE")
 # equilibrium expectation
-self_ecoli_ee_zeros <- load_rdata("ecoli2.self.study.EE.zeros")
-self_ecoli_ee_zero_edges <- load_rdata("ecoli2.self.study.EE.zeros_and_edges")
-self_ecoli_ee_mple <- load_rdata("ecoli2.self.study.EE.MPLE")
+self_ecoli_ee_zeros <- load_network_rdata("ecoli2.self.study.EE.zeros")
+self_ecoli_ee_zero_edges <- load_network_rdata("ecoli2.self.study.EE.zeros_and_edges")
+self_ecoli_ee_mple <- load_network_rdata("ecoli2.self.study.EE.MPLE")
 self_stats_ecoli_ee <- load_stats_rdata("ecoli2.self.study.EE.zeros", "ecoli2.self.study.EE.zeros_and_edges", "ecoli2.self.study.EE.MPLE")
 # MCMLE
-self_ecoli_mcmle_zeros <- load_rdata("ecoli2.self.study.MCMLE.zeros")
-self_ecoli_mcmle_zero_edges <- load_rdata("ecoli2.self.study.MCMLE.zeros_and_edges")
-self_ecoli_mcmle_mple <- load_rdata("ecoli2.self.study.MCMLE.MPLE")
+self_ecoli_mcmle_zeros <- load_network_rdata("ecoli2.self.study.MCMLE.zeros")
+self_ecoli_mcmle_zero_edges <- load_network_rdata("ecoli2.self.study.MCMLE.zeros_and_edges")
+self_ecoli_mcmle_mple <- load_network_rdata("ecoli2.self.study.MCMLE.MPLE")
 self_stats_ecoli_mcmle <- load_stats_rdata("ecoli2.self.study.MCMLE.zeros", "ecoli2.self.study.MCMLE.zeros_and_edges", "ecoli2.self.study.MCMLE.MPLE")
 
 ```
@@ -94,33 +94,33 @@ Kapferer models have no MCMLE method right now since it doesn;t seem to be worki
 ```{r kapferer1-models, eval=FALSE, include=FALSE}
 
 # stochastic approximation
-kap1_sa_zeros <- load_rdata("kapferer.Stochastic-Approximation.zeros")
-kap1_sa_zero_edges <- load_rdata("kapferer.Stochastic-Approximation.zeros_and_edges")
-kap1_sa_mple <- load_rdata("kapferer.Stochastic-Approximation.MPLE")
+kap1_sa_zeros <- load_network_rdata("kapferer.Stochastic-Approximation.zeros")
+kap1_sa_zero_edges <- load_network_rdata("kapferer.Stochastic-Approximation.zeros_and_edges")
+kap1_sa_mple <- load_network_rdata("kapferer.Stochastic-Approximation.MPLE")
 stats_kap1_sa <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
 # equilibrium expectation
-kap1_ee_zeros <- load_rdata("kapferer.EE.zeros")
-kap1_ee_zero_edges <- load_rdata("kapferer.EE.zeros_and_edges")
-kap1_ee_mple <- load_rdata("kapferer.EE.MPLE")
+kap1_ee_zeros <- load_network_rdata("kapferer.EE.zeros")
+kap1_ee_zero_edges <- load_network_rdata("kapferer.EE.zeros_and_edges")
+kap1_ee_mple <- load_network_rdata("kapferer.EE.MPLE")
 stats_kap1_ee <- load_stats_rdata("kapferer.EE.zeros", "kapferer.EE.zeros_and_edges", "kapferer.EE.MPLE")
 # MCMLE
-# kap1_mcmle_zeros <- load_rdata("kapferer.MCMLE.zeros")
-# kap1_mcmle_zero_edges <- load_rdata("kapferer.MCMLE.zeros_and_edges")
-# kap1_mcmle_mple <- load_rdata("kapferer.MCMLE.MPLE")
+# kap1_mcmle_zeros <- load_network_rdata("kapferer.MCMLE.zeros")
+# kap1_mcmle_zero_edges <- load_network_rdata("kapferer.MCMLE.zeros_and_edges")
+# kap1_mcmle_mple <- load_network_rdata("kapferer.MCMLE.MPLE")
 # stats_kap1_mcmle <- load_stats_rdata("kapferer.Stochastic-Approximation.zeros", "kapferer.Stochastic-Approximation.zeros_and_edges", "kapferer.Stochastic-Approximation.MPLE")
 
 ```
 
 ```{r}
 # stochastic approximation
-kap2_sa_zeros <- load_rdata("kapferer2.Stochastic-Approximation.zeros")
-kap2_sa_zero_edges <- load_rdata("kapferer2.Stochastic-Approximation.zeros_and_edges")
-kap2_sa_mple <- load_rdata("kapferer2.Stochastic-Approximation.MPLE")
+kap2_sa_zeros <- load_network_rdata("kapferer2.Stochastic-Approximation.zeros")
+kap2_sa_zero_edges <- load_network_rdata("kapferer2.Stochastic-Approximation.zeros_and_edges")
+kap2_sa_mple <- load_network_rdata("kapferer2.Stochastic-Approximation.MPLE")
 stats_kap2_sa <- load_stats_rdata("kapferer2.Stochastic-Approximation.zeros", "kapferer2.Stochastic-Approximation.zeros_and_edges", "kapferer2.Stochastic-Approximation.MPLE")
 # equilibrium expectation
-kap2_ee_zeros <- load_rdata("kapferer2.EE.zeros")
-kap2_ee_zero_edges <- load_rdata("kapferer2.EE.zeros_and_edges")
-kap2_ee_mple <- load_rdata("kapferer2.EE.MPLE")
+kap2_ee_zeros <- load_network_rdata("kapferer2.EE.zeros")
+kap2_ee_zero_edges <- load_network_rdata("kapferer2.EE.zeros_and_edges")
+kap2_ee_mple <- load_network_rdata("kapferer2.EE.MPLE")
 stats_kap2_ee <- load_stats_rdata("kapferer2.EE.zeros", "kapferer2.EE.zeros_and_edges", "kapferer2.EE.MPLE")
 ```
 
@@ -139,7 +139,7 @@ params_ecoli <- tabulate_parameters(params_ecoli, stats_ecoli_ee)
 params_ecoli <- tabulate_parameters(params_ecoli, stats_ecoli_sa)
 params_ecoli <- tabulate_parameters(params_ecoli, stats_ecoli_mcmle)
 print(params_ecoli)
-
+print.xtable(xtable(params_ecoli), file = "~/math5005/msresearch/outputs/subphase10/tables/ecoli1_params.txt")
 ```
 
 ### ecoli self
@@ -151,7 +151,7 @@ self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_ee)
 self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_sa)
 self_params_ecoli <- tabulate_parameters(self_params_ecoli, self_stats_ecoli_mcmle)
 print(self_params_ecoli, row.names = F)
-
+print.xtable(xtable(self_params_ecoli), file = "~/math5005/msresearch/outputs/subphase10/tables/self_ecoli_params.txt")
 ```
 
 ### Kap 1
@@ -162,6 +162,7 @@ params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_ee)
 params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_sa)
 # params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_mcmle)
 print(params_kap1)
+print.xtable(xtable(params_kap1), file = "~/math5005/msresearch/outputs/subphase10/tables/params_kap1.txt")
 ```
 
 
@@ -171,7 +172,7 @@ params_kap2 <- data.frame()
 params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_ee)
 params_kap2 <- tabulate_parameters(params_kap2, stats_kap2_sa)
 # params_kap1 <- tabulate_parameters(params_kap1, stats_kap1_mcmle)
-print.xtable(xtable(params_kap2), file = "~/math5005/msresearch/outputs/tables/kap2_params.txt")
+print.xtable(xtable(params_kap2), file = "~/math5005/msresearch/outputs/subphase10/tables/kap2_params.txt")
 print(params_kap2)
 
 ```
@@ -187,7 +188,7 @@ df_ecoli <- tabulate_runtimes(df_ecoli, stats_ecoli_ee)
 df_ecoli <- tabulate_runtimes(df_ecoli, stats_ecoli_sa)
 df_ecoli <- tabulate_runtimes(df_ecoli, stats_ecoli_mcmle)
 print(df_ecoli)
-
+print.xtable(xtable(df_ecoli), file = "~/math5005/msresearch/outputs/subphase10/tables/ecoli1_runtimes.txt")
 ```
 
 ### E. Coli 2
@@ -199,7 +200,7 @@ df_self_ecoli <- tabulate_runtimes(df_self_ecoli, self_stats_ecoli_ee)
 df_self_ecoli <- tabulate_runtimes(df_self_ecoli, self_stats_ecoli_sa)
 df_self_ecoli <- tabulate_runtimes(df_self_ecoli, self_stats_ecoli_mcmle)
 print(df_self_ecoli)
-
+print.xtable(xtable(df_self_ecoli), file = "~/math5005/msresearch/outputs/subphase10/tables/self_ecoli1_runtimes.txt")
 ```
 
 ### Kap 1
@@ -210,6 +211,7 @@ df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_ee)
 df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_sa)
 # df_kap1 <- tabulate_runtimes(df_kap1, stats_kap1_mcmle)
 print(df_kap1)
+print.xtable(xtable(df_kap1), file = "~/math5005/msresearch/outputs/subphase10/tables/kap1_runtimes.txt")
 ```
 
 
@@ -221,6 +223,7 @@ df_kap2 <- tabulate_runtimes(df_kap2, stats_kap2_ee)
 df_kap2 <- tabulate_runtimes(df_kap2, stats_kap2_sa)
 # df_ecoli <- tabulate_runtimes(df_ecoli, stats_kap2_mcmle)
 print(df_kap2)
+print.xtable(xtable(df_kap2), file = "~/math5005/msresearch/outputs/subphase10/tables/kap2_runtimes.txt")
 ```
 
 ## Traceplots
@@ -279,8 +282,9 @@ theta0 = mple
 ```{r ecoli1-mcmle}
 mcmc.diagnostics(ecoli_mcmle_mple)
 ```
-### Ecoli data set + self loop
 
+
+### Ecoli data set + self loop
 
 #### EE 
 
@@ -336,3 +340,67 @@ theta0 = mple
 ```{r ecoli2-mcmle}
 mcmc.diagnostics(self_ecoli_mcmle_mple)
 ```
+### Kapferer 1
+
+#### EE
+
+theta0 = 0
+```{r}
+mcmc.diagnostics(kap1_ee_zeros)
+```
+theta0 = edges
+```{r}
+mcmc.diagnostics(kap1_ee_zero_edges)
+```
+thete0 = mple
+```{r}
+mcmc.diagnostics(kap1_ee_mple)
+```
+
+#### SA
+
+theta0 = 0
+```{r}
+mcmc.diagnostics(kap1_sa_zeros)
+```
+theta0 = edges
+```{r}
+mcmc.diagnostics(kap1_sa_zero_edges)
+```
+thete0 = mple
+```{r}
+mcmc.diagnostics(kap1_sa_mple)
+```
+
+#### Kapferer2 
+
+#### EE
+
+theta0 = 0
+```{r}
+mcmc.diagnostics(kap2_ee_zeros)
+```
+theta0 = edges
+```{r}
+mcmc.diagnostics(kap2_ee_zero_edges)
+```
+thete0 = mple
+```{r}
+mcmc.diagnostics(kap2_ee_mple)
+```
+
+#### SA
+
+theta0 = 0
+```{r}
+mcmc.diagnostics(kap2_sa_zeros)
+```
+theta0 = edges
+```{r}
+mcmc.diagnostics(kap2_sa_zero_edges)
+```
+thete0 = mple
+```{r}
+mcmc.diagnostics(kap2_sa_mple)
+```
+
